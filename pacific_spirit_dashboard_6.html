@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pacific Spirit · Social Dashboard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #3B5840; --green-pale: #eaf0eb;
+  --cream: #F6F2ED; --sand: #E8E2D9; --sand-dark: #D5CCBF;
+  --brown: #1A1510; --muted: #7A7060;
+  --accent: #C4894F; --accent-pale: #f5e8d8;
+  --tt: #E8173A; --tt-pale: #fdedf0;
+  --ig: #9B2D8A; --ig-pale: #f7edf6;
+  --white: #FFFFFF;
+  --up: #1E7A3C; --up-bg: #e6f4ec;
+  --down: #B83228; --down-bg: #faecea;
+  --sidebar-w: 216px; --radius: 8px;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif; background: var(--cream); color: var(--brown); display: flex; min-height: 100vh; font-size: 13px; }
+
+/* SIDEBAR */
+.sidebar { width: var(--sidebar-w); background: var(--green); min-height: 100vh; display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; }
+.sidebar-logo { padding: 20px 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.09); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.logo-text .brand { font-size: 11px; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; color: white; }
+.logo-text .sub { font-size: 10px; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-top: 2px; }
+.sidebar-section-label { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 18px 18px 7px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 18px; font-size: 12.5px; color: rgba(255,255,255,0.58); cursor: pointer; border-left: 2px solid transparent; transition: all 0.12s; user-select: none; }
+.nav-item:hover { color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.06); }
+.nav-item.active { color: white; background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
+.nav-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+.nav-item.active .nav-icon { opacity: 1; }
+.sidebar-accounts { padding: 0 10px; }
+.acct-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; transition: background 0.12s; margin-bottom: 1px; user-select: none; }
+.acct-item:hover { background: rgba(255,255,255,0.07); }
+.acct-item.selected { background: rgba(255,255,255,0.13); }
+.acct-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.acct-name { font-size: 12px; color: rgba(255,255,255,0.68); }
+.acct-platform { font-size: 10px; color: rgba(255,255,255,0.3); }
+.sidebar-bottom { margin-top: auto; padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.09); font-size: 10.5px; color: rgba(255,255,255,0.3); }
+
+/* MAIN */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+
+/* TOPBAR */
+.topbar { background: var(--white); border-bottom: 1px solid var(--sand); padding: 0 26px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.page-title { font-size: 14px; font-weight: 600; color: var(--brown); }
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.date-range { background: var(--cream); border: 1px solid var(--sand-dark); border-radius: 5px; padding: 5px 11px; font-size: 11.5px; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.btn-green { background: var(--green); color: white; border: none; padding: 6px 14px; border-radius: 5px; font-size: 12px; cursor: pointer; font-family: inherit; transition: opacity 0.12s; }
+.btn-green:hover { opacity: 0.85; }
+.breadcrumb { font-size: 11.5px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.breadcrumb span { color: var(--brown); font-weight: 500; }
+
+/* ACCOUNT TABS */
+.account-tabs { background: var(--white); border-bottom: 1px solid var(--sand); padding: 0 26px; display: flex; gap: 2px; overflow-x: auto; }
+.account-tabs::-webkit-scrollbar { display: none; }
+.tab { padding: 12px 14px 11px; font-size: 12.5px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 6px; transition: all 0.12s; flex-shrink: 0; user-select: none; }
+.tab:hover { color: var(--brown); }
+.tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 500; }
+.tab-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* PAGE VIEWS */
+.page { display: none; flex-direction: column; }
+.page.active { display: flex; }
+
+/* CONTENT */
+.content { padding: 22px 26px; display: flex; flex-direction: column; gap: 16px; }
+
+/* CARDS */
+.card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--sand); }
+.card-header { padding: 15px 18px 0; display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 10.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.card-body { padding: 14px 18px 18px; }
+
+/* KPIs */
+.kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.kpi-card { background: var(--white); border: 1px solid var(--sand); border-radius: var(--radius); padding: 16px 18px; }
+.kpi-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; font-weight: 500; }
+.kpi-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.kpi-value { font-size: 28px; font-weight: 700; color: var(--brown); line-height: 1; margin-bottom: 9px; letter-spacing: -1px; }
+.kpi-change { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 3px; }
+.kpi-change.up { color: var(--up); background: var(--up-bg); }
+.kpi-change.down { color: var(--down); background: var(--down-bg); }
+.kpi-sub { font-size: 10.5px; color: var(--muted); margin-top: 5px; }
+
+/* CHARTS */
+.charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+.chart-area { height: 152px; }
+.chart-area svg { width: 100%; height: 100%; overflow: visible; }
+.chart-legend { display: flex; gap: 14px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.legend-line { width: 18px; height: 2px; border-radius: 1px; }
+.y-lbl { font-family: 'Courier New', monospace; font-size: 9px; fill: #B0A898; }
+.x-lbl { font-family: 'Courier New', monospace; font-size: 9px; fill: #B0A898; }
+
+/* BAR CHART */
+.bar-row { display: flex; flex-direction: column; gap: 11px; }
+.bar-item-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.bar-item-name { font-size: 12px; color: var(--brown); font-weight: 500; }
+.bar-item-val { font-size: 11.5px; color: var(--muted); font-family: 'Courier New', monospace; }
+.bar-track { height: 5px; background: var(--sand); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+
+/* TABLE */
+.acct-table { width: 100%; border-collapse: collapse; }
+.acct-table th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); padding: 0 10px 9px; border-bottom: 1px solid var(--sand); font-weight: 600; }
+.acct-table td { padding: 10px; font-size: 12.5px; border-bottom: 1px solid var(--sand); vertical-align: middle; }
+.acct-table tr:last-child td { border-bottom: none; }
+.acct-table tr:hover td { background: #FAFAF8; }
+.acct-name-cell { display: flex; align-items: center; gap: 10px; }
+.acct-avatar { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.acct-avatar.tt { background: var(--tt-pale); }
+.acct-avatar.ig { background: var(--ig-pale); }
+.acct-main-label { font-size: 12.5px; font-weight: 500; color: var(--brown); }
+.acct-sublabel { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+.badge { font-size: 10px; padding: 2px 7px; border-radius: 3px; font-weight: 600; letter-spacing: 0.3px; }
+.badge-tt { background: var(--tt-pale); color: var(--tt); }
+.badge-ig { background: var(--ig-pale); color: var(--ig); }
+.badge-active { background: var(--up-bg); color: var(--up); }
+.badge-slow { background: var(--sand); color: var(--muted); }
+.badge-growing { background: var(--accent-pale); color: var(--accent); }
+.chg { font-size: 12px; font-weight: 600; font-family: 'Courier New', monospace; }
+.chg.up { color: var(--up); } .chg.down { color: var(--down); }
+td.num { font-family: 'Courier New', monospace; font-size: 12px; }
+
+/* FUNNEL */
+.funnel-wrap { display: flex; align-items: stretch; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--sand); }
+.funnel-step { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 22px 10px 20px; background: var(--cream); border-right: 1px solid var(--sand); }
+.funnel-step:last-child { border-right: none; background: rgba(196,137,79,0.06); }
+.funnel-step:first-child { background: rgba(59,88,64,0.06); }
+.funnel-val { font-size: 24px; font-weight: 700; color: var(--brown); letter-spacing: -0.5px; font-family: 'Courier New', monospace; }
+.funnel-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; font-weight: 500; text-align: center; }
+.funnel-pct { font-size: 11px; color: var(--accent); font-weight: 600; margin-top: 6px; }
+.funnel-arrow-col { width: 18px; display: flex; align-items: center; justify-content: center; background: var(--cream); border-right: 1px solid var(--sand); flex-shrink: 0; }
+
+/* POSTS */
+.post-row { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 1px solid var(--sand); }
+.post-row:last-child { border-bottom: none; padding-bottom: 0; }
+.post-row:first-child { padding-top: 0; }
+.post-rank { font-size: 10.5px; color: var(--muted); font-weight: 600; width: 14px; text-align: center; flex-shrink: 0; font-family: 'Courier New', monospace; }
+.post-thumb { width: 38px; height: 38px; border-radius: 5px; flex-shrink: 0; }
+.post-title { font-size: 12.5px; font-weight: 500; color: var(--brown); }
+.post-meta { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+.post-views { font-size: 12.5px; font-weight: 600; color: var(--brown); white-space: nowrap; font-family: 'Courier New', monospace; }
+
+/* UTM */
+.utm-form { display: flex; flex-direction: column; gap: 10px; }
+.input-row { display: flex; gap: 8px; }
+.form-group { flex: 1; }
+.form-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 5px; display: block; font-weight: 600; }
+.form-input, .form-select { width: 100%; background: var(--cream); border: 1px solid var(--sand-dark); border-radius: 5px; padding: 7px 10px; font-size: 12.5px; color: var(--brown); outline: none; transition: border-color 0.12s; font-family: inherit; }
+.form-input:focus, .form-select:focus { border-color: var(--green); background: white; }
+.utm-output { background: #1C2A1E; border-radius: 5px; padding: 10px 13px; font-family: 'Courier New', monospace; font-size: 11px; color: #8FBF96; word-break: break-all; line-height: 1.6; }
+.utm-actions { display: flex; gap: 7px; }
+.btn-primary { background: var(--green); color: white; border: none; padding: 7px 16px; border-radius: 5px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 500; transition: opacity 0.12s; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--sand-dark); padding: 7px 14px; border-radius: 5px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.12s; }
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+/* NOTES */
+.note-row { padding: 10px 13px; border-radius: 6px; background: var(--cream); border-left: 2.5px solid var(--sand-dark); margin-bottom: 8px; }
+.note-row:last-child { margin-bottom: 0; }
+.note-row.tt { border-left-color: var(--tt); }
+.note-row.ig { border-left-color: var(--ig); }
+.note-row.green { border-left-color: var(--green); }
+.note-account { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+.note-text { font-size: 12px; color: var(--brown); line-height: 1.55; }
+.note-time { font-size: 10px; color: var(--muted); margin-top: 4px; font-family: 'Courier New', monospace; }
+textarea.note-input { width: 100%; background: var(--cream); border: 1px solid var(--sand-dark); border-radius: 5px; padding: 8px 10px; font-size: 12.5px; color: var(--brown); font-family: inherit; resize: vertical; min-height: 72px; outline: none; transition: border-color 0.12s; }
+textarea.note-input:focus { border-color: var(--green); background: white; }
+
+/* BOTTOM 2-COL */
+.bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ANALYTICS PAGE — bigger charts */
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.analytics-grid.full { grid-template-columns: 1fr; }
+.stat-table { width: 100%; border-collapse: collapse; }
+.stat-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; padding: 0 10px 8px; border-bottom: 1px solid var(--sand); text-align: left; }
+.stat-table td { padding: 9px 10px; font-size: 12.5px; border-bottom: 1px solid var(--sand); }
+.stat-table tr:last-child td { border-bottom: none; }
+.stat-table td.num { font-family: 'Courier New', monospace; font-size: 12px; }
+
+/* CONTENT PAGE */
+.content-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.post-card { background: var(--white); border: 1px solid var(--sand); border-radius: var(--radius); overflow: hidden; }
+.post-card-thumb { height: 120px; }
+.post-card-body { padding: 12px 14px; }
+.post-card-title { font-size: 12.5px; font-weight: 500; color: var(--brown); margin-bottom: 6px; }
+.post-card-meta { font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; }
+.post-card-views { font-size: 13px; font-weight: 700; color: var(--brown); font-family: 'Courier New', monospace; margin-top: 8px; }
+
+/* ACCOUNT DETAIL */
+.account-hero { background: var(--green); border-radius: var(--radius); padding: 24px; color: white; display: flex; align-items: center; gap: 20px; }
+.account-hero-avatar { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+.account-hero-name { font-size: 18px; font-weight: 700; }
+.account-hero-sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; text-transform: uppercase; letter-spacing: 1.5px; }
+.account-hero-stats { display: flex; gap: 28px; margin-left: auto; }
+.hero-stat-val { font-size: 22px; font-weight: 700; font-family: 'Courier New', monospace; }
+.hero-stat-lbl { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+
+/* EMPTY STATE */
+.empty-state { padding: 40px 20px; text-align: center; color: var(--muted); }
+.empty-state p { font-size: 13px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo" onclick="navigate('overview')">
+    <svg viewBox="0 0 100 68" width="34" height="23" xmlns="http://www.w3.org/2000/svg">
+      <path fill="white" d="M 17.1,30.5 Q 13.1,30.3 14.5,34.1 L 21.1,52.5 Q 22.5,56.3 26.5,56.6 L 33.5,57.2 Q 37.5,57.5 36.0,53.8 L 28.4,34.6 Q 26.9,30.9 22.9,30.7 Z"/>
+      <path fill="white" d="M 51.1,28.4 Q 52.5,24.7 48.5,24.9 L 44.0,25.1 Q 40.0,25.3 38.1,28.8 L 36.3,32.4 Q 34.4,35.9 35.8,39.7 L 39.8,50.6 Q 41.2,54.4 42.6,50.7 Z"/>
+      <path fill="white" d="M 80.5,14.4 Q 82.5,9.3 77.1,10.1 L 71.0,10.9 Q 65.6,11.7 63.5,16.8 L 49.0,52.4 Q 46.9,57.5 52.4,57.1 L 58.3,56.7 Q 63.8,56.3 65.8,51.2 Z"/>
+    </svg>
+    <div class="logo-text">
+      <div class="brand">Wells Capital</div>
+      <div class="sub">Pacific Spirit</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section-label">Views</div>
+  <div class="nav-item active" data-page="overview" onclick="navigate('overview')">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+    Overview
+  </div>
+  <div class="nav-item" data-page="analytics" onclick="navigate('analytics')">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1,12 5,7 8,10 11,5 15,3"/></svg>
+    Analytics
+  </div>
+  <div class="nav-item" data-page="content" onclick="navigate('content')">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg>
+    Content
+  </div>
+  <div class="nav-item" data-page="funnel" onclick="navigate('funnel')">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="2,14 6,8 10,11 14,3"/><line x1="2" y1="14" x2="14" y2="14"/></svg>
+    Funnel
+  </div>
+  <div class="nav-item" data-page="utm" onclick="navigate('utm')">
+    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3a4 4 0 0 1 0 5.66L6.34 12.3A3 3 0 0 1 2.1 8.06L6 4.17"/><circle cx="11.5" cy="4.5" r="1.5"/></svg>
+    UTM Links
+  </div>
+
+  <div class="sidebar-section-label" style="margin-top:4px;">Accounts</div>
+  <div class="sidebar-accounts">
+    <div class="acct-item" data-acct="naomi-tt" onclick="navigateAccount('naomi-tt','Naomi Vale','TikTok · AI Persona','tt')">
+      <div class="acct-dot" style="background:var(--tt)"></div>
+      <div><div class="acct-name">Naomi Vale</div><div class="acct-platform">TikTok · AI Persona</div></div>
+    </div>
+    <div class="acct-item" data-acct="meme1" onclick="navigateAccount('meme1','Meme Page 1','TikTok','tt')">
+      <div class="acct-dot" style="background:var(--tt)"></div>
+      <div><div class="acct-name">Meme Page 1</div><div class="acct-platform">TikTok</div></div>
+    </div>
+    <div class="acct-item" data-acct="meme2" onclick="navigateAccount('meme2','Meme Page 2','TikTok','tt')">
+      <div class="acct-dot" style="background:var(--tt)"></div>
+      <div><div class="acct-name">Meme Page 2</div><div class="acct-platform">TikTok</div></div>
+    </div>
+    <div class="acct-item" data-acct="ps-ig" onclick="navigateAccount('ps-ig','Pacific Spirit','Instagram · Brand','ig')">
+      <div class="acct-dot" style="background:var(--ig)"></div>
+      <div><div class="acct-name">Pacific Spirit</div><div class="acct-platform">Instagram · Brand</div></div>
+    </div>
+    <div class="acct-item" data-acct="naomi-ig" onclick="navigateAccount('naomi-ig','Naomi Vale','Instagram · AI Persona','ig')">
+      <div class="acct-dot" style="background:var(--ig)"></div>
+      <div><div class="acct-name">Naomi Vale</div><div class="acct-platform">Instagram · AI Persona</div></div>
+    </div>
+  </div>
+  <div class="sidebar-bottom">Last synced Jun 24 · 21:55</div>
+</aside>
+
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="page-title" id="pageTitle">Social Overview</span>
+      <div class="breadcrumb" id="breadcrumb" style="display:none">
+        <span style="cursor:pointer;color:var(--muted)" onclick="navigate('overview')">Overview</span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg>
+        <span id="breadcrumbLabel"></span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="date-range">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="12" height="12" rx="1.5"/><line x1="5" y1="1" x2="5" y2="5"/><line x1="11" y1="1" x2="11" y2="5"/><line x1="2" y1="7" x2="14" y2="7"/></svg>
+        Jun 17 – Jun 24, 2026
+      </div>
+      <button class="btn-green">Refresh</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ PAGE: OVERVIEW ═══════════════════════ -->
+  <div class="page active" id="page-overview">
+    <div class="account-tabs">
+      <div class="tab active" onclick="switchTab(this)">All Accounts</div>
+      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--tt)"></div>Naomi Vale TT</div>
+      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--tt)"></div>Meme Page 1</div>
+      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--tt)"></div>Meme Page 2</div>
+      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--ig)"></div>Pacific Spirit IG</div>
+      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--ig)"></div>Naomi Vale IG</div>
+    </div>
+    <div class="content">
+      <div class="kpi-row">
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Total Followers</div><div class="kpi-value">24.8K</div><span class="kpi-change up">+8.2% WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Total Views</div><div class="kpi-value">312K</div><span class="kpi-change up">+23.1% WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Avg Eng. Rate</div><div class="kpi-value">4.1%</div><span class="kpi-change down">–0.3% WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Posts This Week</div><div class="kpi-value">34</div><span class="kpi-change up">+6 WoW</span></div>
+      </div>
+      <div class="charts-row">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Weekly Views Trend</span>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-line" style="background:var(--green)"></div>All</div>
+              <div class="legend-item"><div class="legend-line" style="background:repeating-linear-gradient(to right,var(--tt) 0,var(--tt) 4px,transparent 4px,transparent 8px)"></div>TikTok</div>
+              <div class="legend-item"><div class="legend-line" style="background:repeating-linear-gradient(to right,var(--ig) 0,var(--ig) 3px,transparent 3px,transparent 6px)"></div>Instagram</div>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-area">
+            <svg viewBox="0 0 500 140" preserveAspectRatio="none">
+              <defs><linearGradient id="gGrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B5840" stop-opacity="0.15"/><stop offset="100%" stop-color="#3B5840" stop-opacity="0"/></linearGradient></defs>
+              <line x1="38" y1="10" x2="492" y2="10" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="38" y1="40" x2="492" y2="40" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="38" y1="70" x2="492" y2="70" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="38" y1="100" x2="492" y2="100" stroke="#E8E2D9" stroke-width="1"/>
+              <text x="32" y="13" text-anchor="end" class="y-lbl">400K</text>
+              <text x="32" y="43" text-anchor="end" class="y-lbl">300K</text>
+              <text x="32" y="73" text-anchor="end" class="y-lbl">200K</text>
+              <text x="32" y="103" text-anchor="end" class="y-lbl">100K</text>
+              <text x="75"  y="124" text-anchor="middle" class="x-lbl">W1</text>
+              <text x="150" y="124" text-anchor="middle" class="x-lbl">W2</text>
+              <text x="225" y="124" text-anchor="middle" class="x-lbl">W3</text>
+              <text x="300" y="124" text-anchor="middle" class="x-lbl">W4</text>
+              <text x="375" y="124" text-anchor="middle" class="x-lbl">W5</text>
+              <text x="455" y="124" text-anchor="middle" class="x-lbl">W6</text>
+              <path d="M75,97 L150,87 L225,74 L300,58 L375,41 L455,15 L455,110 L75,110 Z" fill="url(#gGrd)"/>
+              <path d="M75,97 L150,87 L225,74 L300,58 L375,41 L455,15" stroke="#3B5840" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M75,101 L150,93 L225,81 L300,66 L375,48 L455,22" stroke="#E8173A" stroke-width="1.8" fill="none" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <path d="M75,108 L150,104 L225,99 L300,93 L375,83 L455,70" stroke="#9B2D8A" stroke-width="1.8" fill="none" stroke-dasharray="3,3" stroke-linecap="round"/>
+              <circle cx="75" cy="97" r="3" fill="#3B5840"/><circle cx="150" cy="87" r="3" fill="#3B5840"/>
+              <circle cx="225" cy="74" r="3" fill="#3B5840"/><circle cx="300" cy="58" r="3" fill="#3B5840"/>
+              <circle cx="375" cy="41" r="3" fill="#3B5840"/><circle cx="455" cy="15" r="4" fill="#3B5840" stroke="white" stroke-width="2"/>
+            </svg>
+          </div></div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="padding-bottom:12px;"><span class="card-title">Views by Account</span></div>
+          <div style="padding:0 18px 18px;">
+            <div class="bar-row">
+              <div><div class="bar-item-label"><span class="bar-item-name">Naomi Vale TT</span><span class="bar-item-val">148K</span></div><div class="bar-track"><div class="bar-fill" style="width:47%;background:var(--tt)"></div></div></div>
+              <div><div class="bar-item-label"><span class="bar-item-name">Meme Page 1</span><span class="bar-item-val">82K</span></div><div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--tt);opacity:0.6"></div></div></div>
+              <div><div class="bar-item-label"><span class="bar-item-name">Meme Page 2</span><span class="bar-item-val">51K</span></div><div class="bar-track"><div class="bar-fill" style="width:16%;background:var(--tt);opacity:0.45"></div></div></div>
+              <div><div class="bar-item-label"><span class="bar-item-name">Pacific Spirit IG</span><span class="bar-item-val">22K</span></div><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--ig)"></div></div></div>
+              <div><div class="bar-item-label"><span class="bar-item-name">Naomi Vale IG</span><span class="bar-item-val">9K</span></div><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--ig);opacity:0.6"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Account Breakdown</span></div>
+        <div class="card-body" style="padding-top:12px;">
+          <table class="acct-table">
+            <thead><tr><th>Account</th><th>Platform</th><th>Followers</th><th>Views</th><th>Eng. Rate</th><th>WoW Followers</th><th>Posts</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#E8173A" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#E8173A" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="acct-main-label">Naomi Vale</div><div class="acct-sublabel">AI persona · disclosed</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num">14,200</td><td class="num">148K</td><td class="num">5.2%</td><td><span class="chg up">+620</span></td><td class="num">12</td><td><span class="badge badge-active">Active</span></td></tr>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#E8173A" stroke-width="1.5"/><line x1="5" y1="8" x2="11" y2="8" stroke="#E8173A" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="#E8173A" stroke-width="1.5"/></svg></div><div><div class="acct-main-label">Meme Page 1</div><div class="acct-sublabel">Wellness memes</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num">6,300</td><td class="num">82K</td><td class="num">3.8%</td><td><span class="chg up">+290</span></td><td class="num">9</td><td><span class="badge badge-active">Active</span></td></tr>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#E8173A" stroke-width="1.5"/><line x1="5" y1="8" x2="11" y2="8" stroke="#E8173A" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="#E8173A" stroke-width="1.5"/></svg></div><div><div class="acct-main-label">Meme Page 2</div><div class="acct-sublabel">Clean girl content</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num">2,100</td><td class="num">51K</td><td class="num">4.4%</td><td><span class="chg up">+140</span></td><td class="num">8</td><td><span class="badge badge-growing">Growing</span></td></tr>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar ig"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="#9B2D8A" stroke-width="1.5"/><circle cx="8" cy="8" r="2.5" stroke="#9B2D8A" stroke-width="1.5"/><circle cx="11.5" cy="4.5" r="0.8" fill="#9B2D8A"/></svg></div><div><div class="acct-main-label">Pacific Spirit</div><div class="acct-sublabel">Brand account</div></div></div></td><td><span class="badge badge-ig">Instagram</span></td><td class="num">1,840</td><td class="num">22K</td><td class="num">3.1%</td><td><span class="chg up">+88</span></td><td class="num">3</td><td><span class="badge badge-active">Active</span></td></tr>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar ig"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#9B2D8A" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#9B2D8A" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="acct-main-label">Naomi Vale</div><div class="acct-sublabel">AI persona · disclosed</div></div></div></td><td><span class="badge badge-ig">Instagram</span></td><td class="num">360</td><td class="num">9K</td><td class="num">2.7%</td><td><span class="chg down">–12</span></td><td class="num">2</td><td><span class="badge badge-slow">Slow</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ PAGE: ANALYTICS ═══════════════════════ -->
+  <div class="page" id="page-analytics">
+    <div class="content">
+      <div class="kpi-row">
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Total Reach</div><div class="kpi-value">198K</div><span class="kpi-change up">+18.4% WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Avg 3-Sec Retention</div><div class="kpi-value">61%</div><span class="kpi-change up">+4% WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Completion Rate</div><div class="kpi-value">34%</div><span class="kpi-change down">–2% WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Saves</div><div class="kpi-value">312</div><span class="kpi-change up">+41 WoW</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Engagement Breakdown by Account</span></div>
+        <div class="card-body" style="padding-top:12px;">
+          <table class="stat-table">
+            <thead><tr><th>Account</th><th>Followers</th><th>Views</th><th>Likes</th><th>Comments</th><th>Shares</th><th>Saves</th><th>Eng. Rate</th><th>3-Sec Ret.</th><th>Completion</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:500">Naomi Vale TT</td><td class="num">14,200</td><td class="num">148K</td><td class="num">6,840</td><td class="num">420</td><td class="num">910</td><td class="num">184</td><td class="num">5.2%</td><td class="num">68%</td><td class="num">38%</td></tr>
+              <tr><td style="font-weight:500">Meme Page 1</td><td class="num">6,300</td><td class="num">82K</td><td class="num">2,870</td><td class="num">198</td><td class="num">540</td><td class="num">72</td><td class="num">3.8%</td><td class="num">61%</td><td class="num">32%</td></tr>
+              <tr><td style="font-weight:500">Meme Page 2</td><td class="num">2,100</td><td class="num">51K</td><td class="num">1,980</td><td class="num">130</td><td class="num">320</td><td class="num">41</td><td class="num">4.4%</td><td class="num">55%</td><td class="num">30%</td></tr>
+              <tr><td style="font-weight:500">Pacific Spirit IG</td><td class="num">1,840</td><td class="num">22K</td><td class="num">540</td><td class="num">88</td><td class="num">42</td><td class="num">84</td><td class="num">3.1%</td><td class="num">—</td><td class="num">—</td></tr>
+              <tr><td style="font-weight:500">Naomi Vale IG</td><td class="num">360</td><td class="num">9K</td><td class="num">198</td><td class="num">24</td><td class="num">18</td><td class="num">31</td><td class="num">2.7%</td><td class="num">—</td><td class="num">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="analytics-grid">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Follower Growth — 6 Weeks</span></div>
+          <div class="card-body"><div class="chart-area">
+            <svg viewBox="0 0 400 130" preserveAspectRatio="none">
+              <defs><linearGradient id="fGrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B5840" stop-opacity="0.12"/><stop offset="100%" stop-color="#3B5840" stop-opacity="0"/></linearGradient></defs>
+              <line x1="30" y1="10" x2="390" y2="10" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="30" y1="50" x2="390" y2="50" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="30" y1="90" x2="390" y2="90" stroke="#E8E2D9" stroke-width="1"/>
+              <text x="24" y="13" text-anchor="end" class="y-lbl">25K</text>
+              <text x="24" y="53" text-anchor="end" class="y-lbl">20K</text>
+              <text x="24" y="93" text-anchor="end" class="y-lbl">15K</text>
+              <path d="M60,95 L120,88 L185,80 L250,68 L315,54 L375,32 L375,100 L60,100 Z" fill="url(#fGrd)"/>
+              <path d="M60,95 L120,88 L185,80 L250,68 L315,54 L375,32" stroke="#3B5840" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="60" cy="95" r="3" fill="#3B5840"/><circle cx="120" cy="88" r="3" fill="#3B5840"/>
+              <circle cx="185" cy="80" r="3" fill="#3B5840"/><circle cx="250" cy="68" r="3" fill="#3B5840"/>
+              <circle cx="315" cy="54" r="3" fill="#3B5840"/><circle cx="375" cy="32" r="4" fill="#3B5840" stroke="white" stroke-width="2"/>
+              <text x="60"  y="118" text-anchor="middle" class="x-lbl">W1</text>
+              <text x="120" y="118" text-anchor="middle" class="x-lbl">W2</text>
+              <text x="185" y="118" text-anchor="middle" class="x-lbl">W3</text>
+              <text x="250" y="118" text-anchor="middle" class="x-lbl">W4</text>
+              <text x="315" y="118" text-anchor="middle" class="x-lbl">W5</text>
+              <text x="375" y="118" text-anchor="middle" class="x-lbl">W6</text>
+            </svg>
+          </div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Platform Split — Views</span></div>
+          <div class="card-body" style="display:flex;align-items:center;gap:24px;">
+            <svg viewBox="0 0 120 120" width="110" height="110" style="flex-shrink:0">
+              <circle cx="60" cy="60" r="45" fill="none" stroke="#E8E2D9" stroke-width="18"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="#E8173A" stroke-width="18" stroke-dasharray="197 85" stroke-dashoffset="-21" stroke-linecap="butt"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="#9B2D8A" stroke-width="18" stroke-dasharray="25 257" stroke-dashoffset="-218" stroke-linecap="butt"/>
+              <text x="60" y="56" text-anchor="middle" style="font-size:14px;font-weight:700;fill:#1A1510">91%</text>
+              <text x="60" y="70" text-anchor="middle" style="font-size:9px;fill:#7A7060">TikTok</text>
+            </svg>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--tt)"></div><span style="font-size:12px;font-weight:500">TikTok</span></div><div style="font-size:18px;font-weight:700;font-family:'Courier New',monospace">281K</div><div style="font-size:10.5px;color:var(--muted)">91% of views</div></div>
+              <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--ig)"></div><span style="font-size:12px;font-weight:500">Instagram</span></div><div style="font-size:18px;font-weight:700;font-family:'Courier New',monospace">31K</div><div style="font-size:10.5px;color:var(--muted)">9% of views</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ PAGE: CONTENT ═══════════════════════ -->
+  <div class="page" id="page-content">
+    <div class="content">
+      <div class="kpi-row">
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Posts This Week</div><div class="kpi-value">34</div><span class="kpi-change up">+6 WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Top Post Views</div><div class="kpi-value">48.2K</div><span class="kpi-change up">+12.1K WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Avg Views / Post</div><div class="kpi-value">9.2K</div><span class="kpi-change up">+1.4K WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Total Saves</div><div class="kpi-value">312</div><span class="kpi-change up">+41 WoW</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Top Posts This Week</span></div>
+        <div class="card-body">
+          <div class="content-grid">
+            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#c8a87a,#7a5230)"></div><div class="post-card-body"><div class="post-card-title">everything shower routine</div><div class="post-card-meta"><span>Naomi Vale TT</span><span>3s ret: 68%</span></div><div class="post-card-views">48.2K views</div></div></div>
+            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#a0bc98,#3B5840)"></div><div class="post-card-body"><div class="post-card-title">tell no one about this shampoo</div><div class="post-card-meta"><span>Meme Page 1</span><span>3s ret: 61%</span></div><div class="post-card-views">31.4K views</div></div></div>
+            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#dfc09a,#b87040)"></div><div class="post-card-body"><div class="post-card-title">my morning skin routine</div><div class="post-card-meta"><span>Naomi Vale TT</span><span>3s ret: 55%</span></div><div class="post-card-views">22.1K views</div></div></div>
+            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#b0ceb8,#507858)"></div><div class="post-card-body"><div class="post-card-title">4 things keeping me glowing</div><div class="post-card-meta"><span>Pacific Spirit IG</span><span>84 saves</span></div><div class="post-card-views">18.7K views</div></div></div>
+            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#d0b898,#907050)"></div><div class="post-card-body"><div class="post-card-title">clean girl essentials</div><div class="post-card-meta"><span>Meme Page 2</span><span>3s ret: 52%</span></div><div class="post-card-views">14.3K views</div></div></div>
+            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#c4d4bc,#607860)"></div><div class="post-card-body"><div class="post-card-title">what's actually in my shower</div><div class="post-card-meta"><span>Naomi Vale TT</span><span>3s ret: 49%</span></div><div class="post-card-views">11.8K views</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ PAGE: FUNNEL ═══════════════════════ -->
+  <div class="page" id="page-funnel">
+    <div class="content">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Conversion Funnel · Social to Shopify</span></div>
+        <div class="card-body">
+          <div class="funnel-wrap">
+            <div class="funnel-step"><div class="funnel-val">312K</div><div class="funnel-lbl">Total Views</div></div>
+            <div class="funnel-arrow-col"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#C8BFAF" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg></div>
+            <div class="funnel-step"><div class="funnel-val">1,560</div><div class="funnel-lbl">Bio Clicks</div><div class="funnel-pct">0.50%</div></div>
+            <div class="funnel-arrow-col"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#C8BFAF" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg></div>
+            <div class="funnel-step"><div class="funnel-val">468</div><div class="funnel-lbl">Shopify Visits</div><div class="funnel-pct">30.0%</div></div>
+            <div class="funnel-arrow-col"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#C8BFAF" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg></div>
+            <div class="funnel-step"><div class="funnel-val">28</div><div class="funnel-lbl">Orders</div><div class="funnel-pct">6.0%</div></div>
+            <div class="funnel-arrow-col"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#C8BFAF" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg></div>
+            <div class="funnel-step"><div class="funnel-val">$756</div><div class="funnel-lbl">DTC Revenue</div><div class="funnel-pct">$27 AOV</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="analytics-grid">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Funnel by Source Account</span></div>
+          <div class="card-body" style="padding-top:12px;">
+            <table class="stat-table">
+              <thead><tr><th>Account</th><th>Bio Clicks</th><th>Shopify Visits</th><th>Orders</th><th>CVR</th></tr></thead>
+              <tbody>
+                <tr><td style="font-weight:500">Naomi Vale TT</td><td class="num">820</td><td class="num">246</td><td class="num">16</td><td class="num">1.95%</td></tr>
+                <tr><td style="font-weight:500">Meme Page 1</td><td class="num">410</td><td class="num">123</td><td class="num">7</td><td class="num">1.71%</td></tr>
+                <tr><td style="font-weight:500">Meme Page 2</td><td class="num">190</td><td class="num">57</td><td class="num">3</td><td class="num">1.58%</td></tr>
+                <tr><td style="font-weight:500">Pacific Spirit IG</td><td class="num">108</td><td class="num">32</td><td class="num">2</td><td class="num">1.85%</td></tr>
+                <tr><td style="font-weight:500">Naomi Vale IG</td><td class="num">32</td><td class="num">10</td><td class="num">0</td><td class="num">0.00%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Weekly Funnel Trend</span></div>
+          <div class="card-body"><div class="chart-area">
+            <svg viewBox="0 0 360 130" preserveAspectRatio="none">
+              <line x1="30" y1="10" x2="350" y2="10" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="30" y1="50" x2="350" y2="50" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="30" y1="90" x2="350" y2="90" stroke="#E8E2D9" stroke-width="1"/>
+              <text x="24" y="13" text-anchor="end" class="y-lbl">40</text>
+              <text x="24" y="53" text-anchor="end" class="y-lbl">20</text>
+              <text x="24" y="93" text-anchor="end" class="y-lbl">0</text>
+              <path d="M55,88 L110,82 L175,74 L240,62 L305,48 L345,32" stroke="#C4894F" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <circle cx="55" cy="88" r="3" fill="#C4894F"/>
+              <circle cx="110" cy="82" r="3" fill="#C4894F"/>
+              <circle cx="175" cy="74" r="3" fill="#C4894F"/>
+              <circle cx="240" cy="62" r="3" fill="#C4894F"/>
+              <circle cx="305" cy="48" r="3" fill="#C4894F"/>
+              <circle cx="345" cy="32" r="4" fill="#C4894F" stroke="white" stroke-width="2"/>
+              <text x="55"  y="118" text-anchor="middle" class="x-lbl">W1</text>
+              <text x="110" y="118" text-anchor="middle" class="x-lbl">W2</text>
+              <text x="175" y="118" text-anchor="middle" class="x-lbl">W3</text>
+              <text x="240" y="118" text-anchor="middle" class="x-lbl">W4</text>
+              <text x="305" y="118" text-anchor="middle" class="x-lbl">W5</text>
+              <text x="345" y="118" text-anchor="middle" class="x-lbl">W6</text>
+            </svg>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ PAGE: UTM ═══════════════════════ -->
+  <div class="page" id="page-utm">
+    <div class="content">
+      <div class="bottom-row">
+        <div class="card">
+          <div class="card-header"><span class="card-title">UTM Link Generator</span></div>
+          <div class="card-body">
+            <div class="utm-form">
+              <div class="input-row">
+                <div class="form-group"><label class="form-label">Source</label><select class="form-select" id="utmSource" onchange="buildUTM()"><option value="tiktok">TikTok</option><option value="instagram">Instagram</option></select></div>
+                <div class="form-group"><label class="form-label">Medium</label><select class="form-select" id="utmMedium" onchange="buildUTM()"><option value="naomi_vale">naomi_vale</option><option value="meme_page_1">meme_page_1</option><option value="meme_page_2">meme_page_2</option><option value="brand">brand</option><option value="bio">bio</option></select></div>
+              </div>
+              <div class="form-group"><label class="form-label">Campaign</label><input class="form-input" id="utmCampaign" type="text" placeholder="e.g. jun_glow_routine" oninput="buildUTM()" value="jun_glow_routine"></div>
+              <div class="form-group"><label class="form-label">Content (optional)</label><input class="form-input" id="utmContent" type="text" placeholder="e.g. shower_video_1" oninput="buildUTM()"></div>
+              <div class="utm-output" id="utmOutput">https://shoppacificspirit.com?utm_source=tiktok&utm_medium=naomi_vale&utm_campaign=jun_glow_routine</div>
+              <div class="utm-actions"><button class="btn-primary" onclick="copyUTM()">Copy Link</button><button class="btn-ghost" onclick="clearUTM()">Clear</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Recent Links</span></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div style="padding:9px 0;border-bottom:1px solid var(--sand);">
+                <div style="font-size:11px;color:var(--muted);font-family:'Courier New',monospace;margin-bottom:3px;">tiktok · naomi_vale · may_everything_shower</div>
+                <div style="font-size:10.5px;color:var(--brown);font-family:'Courier New',monospace;word-break:break-all;color:var(--green)">shoppacificspirit.com?utm_source=tiktok...</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;">May 18 · 14 clicks</div>
+              </div>
+              <div style="padding:9px 0;border-bottom:1px solid var(--sand);">
+                <div style="font-size:11px;color:var(--muted);font-family:'Courier New',monospace;margin-bottom:3px;">instagram · brand · apr_brand_launch</div>
+                <div style="font-size:10.5px;color:var(--green);font-family:'Courier New',monospace;word-break:break-all">shoppacificspirit.com?utm_source=instagram...</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;">Apr 30 · 8 clicks</div>
+              </div>
+              <div style="padding:9px 0;">
+                <div style="font-size:11px;color:var(--muted);font-family:'Courier New',monospace;margin-bottom:3px;">tiktok · meme_page_1 · apr_clean_girl</div>
+                <div style="font-size:10.5px;color:var(--green);font-family:'Courier New',monospace;word-break:break-all">shoppacificspirit.com?utm_source=tiktok...</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;">Apr 22 · 6 clicks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ PAGE: ACCOUNT DETAIL ═══════════════════════ -->
+  <div class="page" id="page-account">
+    <div class="content">
+      <div class="account-hero" id="accountHero">
+        <div class="account-hero-avatar" id="acctHeroAvatar"></div>
+        <div><div class="account-hero-name" id="acctHeroName"></div><div class="account-hero-sub" id="acctHeroSub"></div></div>
+        <div class="account-hero-stats" id="acctHeroStats"></div>
+      </div>
+      <div class="charts-row">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Views — Last 6 Weeks</span></div>
+          <div class="card-body"><div class="chart-area">
+            <svg viewBox="0 0 500 140" preserveAspectRatio="none">
+              <defs><linearGradient id="aGrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B5840" stop-opacity="0.15"/><stop offset="100%" stop-color="#3B5840" stop-opacity="0"/></linearGradient></defs>
+              <line x1="38" y1="10" x2="492" y2="10" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="38" y1="45" x2="492" y2="45" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="38" y1="80" x2="492" y2="80" stroke="#E8E2D9" stroke-width="1"/>
+              <line x1="38" y1="110" x2="492" y2="110" stroke="#E8E2D9" stroke-width="1"/>
+              <text x="32" y="13" text-anchor="end" class="y-lbl">160K</text>
+              <text x="32" y="48" text-anchor="end" class="y-lbl">120K</text>
+              <text x="32" y="83" text-anchor="end" class="y-lbl">80K</text>
+              <text x="32" y="113" text-anchor="end" class="y-lbl">40K</text>
+              <path d="M75,105 L155,95 L230,82 L305,64 L380,46 L455,18 L455,115 L75,115 Z" fill="url(#aGrd)"/>
+              <path d="M75,105 L155,95 L230,82 L305,64 L380,46 L455,18" stroke="#3B5840" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="75" cy="105" r="3" fill="#3B5840"/><circle cx="155" cy="95" r="3" fill="#3B5840"/>
+              <circle cx="230" cy="82" r="3" fill="#3B5840"/><circle cx="305" cy="64" r="3" fill="#3B5840"/>
+              <circle cx="380" cy="46" r="3" fill="#3B5840"/><circle cx="455" cy="18" r="4" fill="#3B5840" stroke="white" stroke-width="2"/>
+              <text x="75"  y="130" text-anchor="middle" class="x-lbl">W1</text>
+              <text x="155" y="130" text-anchor="middle" class="x-lbl">W2</text>
+              <text x="230" y="130" text-anchor="middle" class="x-lbl">W3</text>
+              <text x="305" y="130" text-anchor="middle" class="x-lbl">W4</text>
+              <text x="380" y="130" text-anchor="middle" class="x-lbl">W5</text>
+              <text x="455" y="130" text-anchor="middle" class="x-lbl">W6</text>
+            </svg>
+          </div></div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="padding-bottom:14px;"><span class="card-title">This Week</span></div>
+          <div style="padding:0 18px 18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--sand)"><span style="font-size:12px;color:var(--muted)">Views</span><span class="num" style="font-size:14px;font-weight:700" id="acctStatViews">—</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--sand)"><span style="font-size:12px;color:var(--muted)">Eng. Rate</span><span class="num" style="font-size:14px;font-weight:700" id="acctStatEng">—</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--sand)"><span style="font-size:12px;color:var(--muted)">3-Sec Retention</span><span class="num" style="font-size:14px;font-weight:700" id="acctStatRet">—</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0"><span style="font-size:12px;color:var(--muted)">Posts</span><span class="num" style="font-size:14px;font-weight:700" id="acctStatPosts">—</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Notes</span></div>
+        <div class="card-body">
+          <div id="acctNoteDisplay"></div>
+          <div style="margin-top:12px;">
+            <label class="form-label" style="margin-bottom:6px;display:block;">Add Note</label>
+            <textarea class="note-input" id="noteInput" placeholder="Add a note for this account..."></textarea>
+            <button class="btn-primary" style="margin-top:8px;" onclick="saveNote()">Save Note</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const ACCT_DATA = {
+  'naomi-tt': { name:'Naomi Vale', sub:'TikTok · AI Persona', platform:'tt', followers:'14,200', views:'148K', eng:'5.2%', ret:'68%', posts:'12' },
+  'meme1':    { name:'Meme Page 1', sub:'TikTok', platform:'tt', followers:'6,300', views:'82K', eng:'3.8%', ret:'61%', posts:'9' },
+  'meme2':    { name:'Meme Page 2', sub:'TikTok', platform:'tt', followers:'2,100', views:'51K', eng:'4.4%', ret:'55%', posts:'8' },
+  'ps-ig':    { name:'Pacific Spirit', sub:'Instagram · Brand', platform:'ig', followers:'1,840', views:'22K', eng:'3.1%', ret:'—', posts:'3' },
+  'naomi-ig': { name:'Naomi Vale', sub:'Instagram · AI Persona', platform:'ig', followers:'360', views:'9K', eng:'2.7%', ret:'—', posts:'2' }
+};
+const notes = {};
+
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const navEl = document.querySelector(`[data-page="${page}"]`);
+  if (navEl) navEl.classList.add('active');
+  document.querySelectorAll('.acct-item').forEach(a => a.classList.remove('selected'));
+  const titles = { overview:'Social Overview', analytics:'Analytics', content:'Content', funnel:'Funnel', utm:'UTM Links' };
+  document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
+  document.getElementById('pageTitle').style.display = '';
+  document.getElementById('breadcrumb').style.display = 'none';
+}
+
+function navigateAccount(id, name, sub, platform) {
+  const d = ACCT_DATA[id];
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.acct-item').forEach(a => a.classList.remove('selected'));
+  document.querySelector(`[data-acct="${id}"]`).classList.add('selected');
+  document.getElementById('page-account').classList.add('active');
+  document.getElementById('pageTitle').style.display = 'none';
+  document.getElementById('breadcrumb').style.display = 'flex';
+  document.getElementById('breadcrumbLabel').textContent = name;
+
+  const color = platform === 'tt' ? '#E8173A' : '#9B2D8A';
+  const iconTT = `<svg width="22" height="22" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="${color}" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+  const iconIG = `<svg width="22" height="22" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="${color}" stroke-width="1.5"/><circle cx="8" cy="8" r="2.5" stroke="${color}" stroke-width="1.5"/><circle cx="11.5" cy="4.5" r="0.8" fill="${color}"/></svg>`;
+  document.getElementById('acctHeroAvatar').innerHTML = platform === 'tt' ? iconTT : iconIG;
+  document.getElementById('acctHeroName').textContent = name;
+  document.getElementById('acctHeroSub').textContent = sub;
+  document.getElementById('acctHeroStats').innerHTML = `
+    <div><div class="hero-stat-val">${d.followers}</div><div class="hero-stat-lbl">Followers</div></div>
+    <div><div class="hero-stat-val">${d.views}</div><div class="hero-stat-lbl">Views</div></div>
+    <div><div class="hero-stat-val">${d.eng}</div><div class="hero-stat-lbl">Eng. Rate</div></div>`;
+  document.getElementById('acctStatViews').textContent = d.views;
+  document.getElementById('acctStatEng').textContent = d.eng;
+  document.getElementById('acctStatRet').textContent = d.ret;
+  document.getElementById('acctStatPosts').textContent = d.posts;
+  renderNotes(id);
+  document.getElementById('noteInput').value = '';
+  document.getElementById('noteInput').dataset.acct = id;
+}
+
+function renderNotes(id) {
+  const display = document.getElementById('acctNoteDisplay');
+  const acctNotes = notes[id] || [];
+  if (!acctNotes.length) { display.innerHTML = '<p style="font-size:12px;color:var(--muted);padding:4px 0 8px;">No notes yet.</p>'; return; }
+  display.innerHTML = acctNotes.map(n => `<div class="note-row" style="margin-bottom:8px"><div class="note-text">${n.text}</div><div class="note-time">${n.time}</div></div>`).join('');
+}
+
+function saveNote() {
+  const input = document.getElementById('noteInput');
+  const id = input.dataset.acct;
+  const text = input.value.trim();
+  if (!text || !id) return;
+  if (!notes[id]) notes[id] = [];
+  const now = new Date();
+  notes[id].unshift({ text, time: now.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) });
+  input.value = '';
+  renderNotes(id);
+}
+
+function buildUTM() {
+  const src = document.getElementById('utmSource').value;
+  const med = document.getElementById('utmMedium').value;
+  const cmp = document.getElementById('utmCampaign').value || 'campaign';
+  const cnt = document.getElementById('utmContent')?.value;
+  let url = `https://shoppacificspirit.com?utm_source=${src}&utm_medium=${med}&utm_campaign=${cmp}`;
+  if (cnt) url += `&utm_content=${cnt}`;
+  document.getElementById('utmOutput').textContent = url;
+}
+function copyUTM() {
+  navigator.clipboard.writeText(document.getElementById('utmOutput').textContent).then(() => {
+    const btn = event.currentTarget; btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy Link', 2000);
+  });
+}
+function clearUTM() { document.getElementById('utmCampaign').value = ''; if(document.getElementById('utmContent')) document.getElementById('utmContent').value=''; buildUTM(); }
+function switchTab(el) { document.querySelectorAll('.account-tabs .tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
+</script>
+</body>
+</html>
