@@ -250,24 +250,12 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
       <div class="acct-dot" style="background:var(--tt)"></div>
       <div><div class="acct-name">Naomi Vale</div><div class="acct-platform">TikTok · AI Persona</div></div>
     </div>
-    <div class="acct-item" data-acct="meme1" onclick="navigateAccount('meme1','Meme Page 1','TikTok','tt')">
+    <div class="acct-item" data-acct="ps-tt" onclick="navigateAccount('ps-tt','Pacific Spirit','TikTok · Brand','tt')">
       <div class="acct-dot" style="background:var(--tt)"></div>
-      <div><div class="acct-name">Meme Page 1</div><div class="acct-platform">TikTok</div></div>
-    </div>
-    <div class="acct-item" data-acct="meme2" onclick="navigateAccount('meme2','Meme Page 2','TikTok','tt')">
-      <div class="acct-dot" style="background:var(--tt)"></div>
-      <div><div class="acct-name">Meme Page 2</div><div class="acct-platform">TikTok</div></div>
-    </div>
-    <div class="acct-item" data-acct="ps-ig" onclick="navigateAccount('ps-ig','Pacific Spirit','Instagram · Brand','ig')">
-      <div class="acct-dot" style="background:var(--ig)"></div>
-      <div><div class="acct-name">Pacific Spirit</div><div class="acct-platform">Instagram · Brand</div></div>
-    </div>
-    <div class="acct-item" data-acct="naomi-ig" onclick="navigateAccount('naomi-ig','Naomi Vale','Instagram · AI Persona','ig')">
-      <div class="acct-dot" style="background:var(--ig)"></div>
-      <div><div class="acct-name">Naomi Vale</div><div class="acct-platform">Instagram · AI Persona</div></div>
+      <div><div class="acct-name">Pacific Spirit</div><div class="acct-platform">TikTok · Brand</div></div>
     </div>
   </div>
-  <div class="sidebar-bottom">Last synced Jun 24 · 21:55</div>
+  <div class="sidebar-bottom">Not yet synced</div>
 </aside>
 
 <main class="main">
@@ -296,17 +284,14 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
     <div class="account-tabs">
       <div class="tab active" onclick="switchTab(this)">All Accounts</div>
       <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--tt)"></div>Naomi Vale TT</div>
-      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--tt)"></div>Meme Page 1</div>
-      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--tt)"></div>Meme Page 2</div>
-      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--ig)"></div>Pacific Spirit IG</div>
-      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--ig)"></div>Naomi Vale IG</div>
+      <div class="tab" onclick="switchTab(this)"><div class="tab-dot" style="background:var(--tt)"></div>Pacific Spirit TT</div>
     </div>
     <div class="content">
       <div class="kpi-row">
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Total Followers</div><div class="kpi-value">24.8K</div><span class="kpi-change up">+8.2% WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Total Views</div><div class="kpi-value">312K</div><span class="kpi-change up">+23.1% WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Avg Eng. Rate</div><div class="kpi-value">4.1%</div><span class="kpi-change down">–0.3% WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Posts This Week</div><div class="kpi-value">34</div><span class="kpi-change up">+6 WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Total Followers</div><div class="kpi-value" id="kpiTotalFollowers">—</div><span class="kpi-sub" id="kpiTotalFollowersSub">No data yet</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Total Views</div><div class="kpi-value" id="kpiTotalViews">—</div><span class="kpi-sub" id="kpiTotalViewsSub">No data yet</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Avg Eng. Rate</div><div class="kpi-value">—</div><span class="kpi-sub">Not in TikTok Studio scrape</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Posts This Week</div><div class="kpi-value">—</div><span class="kpi-sub">Not in TikTok Studio scrape</span></div>
       </div>
       <div class="charts-row">
         <div class="card">
@@ -318,42 +303,16 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
               <div class="legend-item"><div class="legend-line" style="background:repeating-linear-gradient(to right,var(--ig) 0,var(--ig) 3px,transparent 3px,transparent 6px)"></div>Instagram</div>
             </div>
           </div>
-          <div class="card-body"><div class="chart-area">
-            <svg viewBox="0 0 500 140" preserveAspectRatio="none">
-              <defs><linearGradient id="gGrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B5840" stop-opacity="0.15"/><stop offset="100%" stop-color="#3B5840" stop-opacity="0"/></linearGradient></defs>
-              <line x1="38" y1="10" x2="492" y2="10" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="38" y1="40" x2="492" y2="40" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="38" y1="70" x2="492" y2="70" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="38" y1="100" x2="492" y2="100" stroke="#E8E2D9" stroke-width="1"/>
-              <text x="32" y="13" text-anchor="end" class="y-lbl">400K</text>
-              <text x="32" y="43" text-anchor="end" class="y-lbl">300K</text>
-              <text x="32" y="73" text-anchor="end" class="y-lbl">200K</text>
-              <text x="32" y="103" text-anchor="end" class="y-lbl">100K</text>
-              <text x="75"  y="124" text-anchor="middle" class="x-lbl">W1</text>
-              <text x="150" y="124" text-anchor="middle" class="x-lbl">W2</text>
-              <text x="225" y="124" text-anchor="middle" class="x-lbl">W3</text>
-              <text x="300" y="124" text-anchor="middle" class="x-lbl">W4</text>
-              <text x="375" y="124" text-anchor="middle" class="x-lbl">W5</text>
-              <text x="455" y="124" text-anchor="middle" class="x-lbl">W6</text>
-              <path d="M75,97 L150,87 L225,74 L300,58 L375,41 L455,15 L455,110 L75,110 Z" fill="url(#gGrd)"/>
-              <path d="M75,97 L150,87 L225,74 L300,58 L375,41 L455,15" stroke="#3B5840" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M75,101 L150,93 L225,81 L300,66 L375,48 L455,22" stroke="#E8173A" stroke-width="1.8" fill="none" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <path d="M75,108 L150,104 L225,99 L300,93 L375,83 L455,70" stroke="#9B2D8A" stroke-width="1.8" fill="none" stroke-dasharray="3,3" stroke-linecap="round"/>
-              <circle cx="75" cy="97" r="3" fill="#3B5840"/><circle cx="150" cy="87" r="3" fill="#3B5840"/>
-              <circle cx="225" cy="74" r="3" fill="#3B5840"/><circle cx="300" cy="58" r="3" fill="#3B5840"/>
-              <circle cx="375" cy="41" r="3" fill="#3B5840"/><circle cx="455" cy="15" r="4" fill="#3B5840" stroke="white" stroke-width="2"/>
-            </svg>
+          <div class="card-body"><div class="chart-area empty-state" style="display:flex;align-items:center;justify-content:center;height:152px;">
+            <p>No trend data yet — connect remaining accounts</p>
           </div></div>
         </div>
         <div class="card">
           <div class="card-header" style="padding-bottom:12px;"><span class="card-title">Views by Account</span></div>
           <div style="padding:0 18px 18px;">
             <div class="bar-row">
-              <div><div class="bar-item-label"><span class="bar-item-name">Naomi Vale TT</span><span class="bar-item-val">148K</span></div><div class="bar-track"><div class="bar-fill" style="width:47%;background:var(--tt)"></div></div></div>
-              <div><div class="bar-item-label"><span class="bar-item-name">Meme Page 1</span><span class="bar-item-val">82K</span></div><div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--tt);opacity:0.6"></div></div></div>
-              <div><div class="bar-item-label"><span class="bar-item-name">Meme Page 2</span><span class="bar-item-val">51K</span></div><div class="bar-track"><div class="bar-fill" style="width:16%;background:var(--tt);opacity:0.45"></div></div></div>
-              <div><div class="bar-item-label"><span class="bar-item-name">Pacific Spirit IG</span><span class="bar-item-val">22K</span></div><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--ig)"></div></div></div>
-              <div><div class="bar-item-label"><span class="bar-item-name">Naomi Vale IG</span><span class="bar-item-val">9K</span></div><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--ig);opacity:0.6"></div></div></div>
+              <div><div class="bar-item-label"><span class="bar-item-name">Naomi Vale TT</span><span class="bar-item-val" id="barNaomiViewsVal">—</span></div><div class="bar-track"><div class="bar-fill" id="barNaomiViewsFill" style="width:0%;background:var(--tt)"></div></div></div>
+              <div><div class="bar-item-label"><span class="bar-item-name">Pacific Spirit TT</span><span class="bar-item-val" id="barPSViewsVal">—</span></div><div class="bar-track"><div class="bar-fill" id="barPSViewsFill" style="width:0%;background:var(--tt);opacity:0.6"></div></div></div>
             </div>
           </div>
         </div>
@@ -364,11 +323,8 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
           <table class="acct-table">
             <thead><tr><th>Account</th><th>Platform</th><th>Followers</th><th>Views</th><th>Eng. Rate</th><th>WoW Followers</th><th>Posts</th><th>Status</th></tr></thead>
             <tbody>
-              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#E8173A" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#E8173A" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="acct-main-label">Naomi Vale</div><div class="acct-sublabel">AI persona · disclosed</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num">14,200</td><td class="num">148K</td><td class="num">5.2%</td><td><span class="chg up">+620</span></td><td class="num">12</td><td><span class="badge badge-active">Active</span></td></tr>
-              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#E8173A" stroke-width="1.5"/><line x1="5" y1="8" x2="11" y2="8" stroke="#E8173A" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="#E8173A" stroke-width="1.5"/></svg></div><div><div class="acct-main-label">Meme Page 1</div><div class="acct-sublabel">Wellness memes</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num">6,300</td><td class="num">82K</td><td class="num">3.8%</td><td><span class="chg up">+290</span></td><td class="num">9</td><td><span class="badge badge-active">Active</span></td></tr>
-              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#E8173A" stroke-width="1.5"/><line x1="5" y1="8" x2="11" y2="8" stroke="#E8173A" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="#E8173A" stroke-width="1.5"/></svg></div><div><div class="acct-main-label">Meme Page 2</div><div class="acct-sublabel">Clean girl content</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num">2,100</td><td class="num">51K</td><td class="num">4.4%</td><td><span class="chg up">+140</span></td><td class="num">8</td><td><span class="badge badge-growing">Growing</span></td></tr>
-              <tr><td><div class="acct-name-cell"><div class="acct-avatar ig"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="#9B2D8A" stroke-width="1.5"/><circle cx="8" cy="8" r="2.5" stroke="#9B2D8A" stroke-width="1.5"/><circle cx="11.5" cy="4.5" r="0.8" fill="#9B2D8A"/></svg></div><div><div class="acct-main-label">Pacific Spirit</div><div class="acct-sublabel">Brand account</div></div></div></td><td><span class="badge badge-ig">Instagram</span></td><td class="num">1,840</td><td class="num">22K</td><td class="num">3.1%</td><td><span class="chg up">+88</span></td><td class="num">3</td><td><span class="badge badge-active">Active</span></td></tr>
-              <tr><td><div class="acct-name-cell"><div class="acct-avatar ig"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#9B2D8A" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#9B2D8A" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="acct-main-label">Naomi Vale</div><div class="acct-sublabel">AI persona · disclosed</div></div></div></td><td><span class="badge badge-ig">Instagram</span></td><td class="num">360</td><td class="num">9K</td><td class="num">2.7%</td><td><span class="chg down">–12</span></td><td class="num">2</td><td><span class="badge badge-slow">Slow</span></td></tr>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#E8173A" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#E8173A" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="acct-main-label">Naomi Vale</div><div class="acct-sublabel">AI persona · disclosed</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num" id="abNaomiFollowers">—</td><td class="num" id="abNaomiViews">—</td><td class="num">—</td><td><span class="chg">—</span></td><td class="num">—</td><td><span class="badge badge-slow">Live (partial)</span></td></tr>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#E8173A" stroke-width="1.5"/><line x1="5" y1="8" x2="11" y2="8" stroke="#E8173A" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="#E8173A" stroke-width="1.5"/></svg></div><div><div class="acct-main-label">Pacific Spirit</div><div class="acct-sublabel">Brand account</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num" id="abPSFollowers">—</td><td class="num" id="abPSViews">—</td><td class="num">—</td><td><span class="chg">—</span></td><td class="num">—</td><td><span class="badge badge-slow">Not connected</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -380,10 +336,10 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
   <div class="page" id="page-analytics">
     <div class="content">
       <div class="kpi-row">
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Total Reach</div><div class="kpi-value">198K</div><span class="kpi-change up">+18.4% WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Avg 3-Sec Retention</div><div class="kpi-value">61%</div><span class="kpi-change up">+4% WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Completion Rate</div><div class="kpi-value">34%</div><span class="kpi-change down">–2% WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Saves</div><div class="kpi-value">312</div><span class="kpi-change up">+41 WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Total Reach</div><div class="kpi-value">—</div><span class="kpi-sub">Connect remaining accounts</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Avg 3-Sec Retention</div><div class="kpi-value">—</div><span class="kpi-sub">Not in TikTok Studio scrape</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Completion Rate</div><div class="kpi-value">—</div><span class="kpi-sub">Not in TikTok Studio scrape</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Saves</div><div class="kpi-value">—</div><span class="kpi-sub">Not in TikTok Studio scrape</span></div>
       </div>
       <div class="card">
         <div class="card-header"><span class="card-title">Engagement Breakdown by Account</span></div>
@@ -391,11 +347,8 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
           <table class="stat-table">
             <thead><tr><th>Account</th><th>Followers</th><th>Views</th><th>Likes</th><th>Comments</th><th>Shares</th><th>Saves</th><th>Eng. Rate</th><th>3-Sec Ret.</th><th>Completion</th></tr></thead>
             <tbody>
-              <tr><td style="font-weight:500">Naomi Vale TT</td><td class="num">14,200</td><td class="num">148K</td><td class="num">6,840</td><td class="num">420</td><td class="num">910</td><td class="num">184</td><td class="num">5.2%</td><td class="num">68%</td><td class="num">38%</td></tr>
-              <tr><td style="font-weight:500">Meme Page 1</td><td class="num">6,300</td><td class="num">82K</td><td class="num">2,870</td><td class="num">198</td><td class="num">540</td><td class="num">72</td><td class="num">3.8%</td><td class="num">61%</td><td class="num">32%</td></tr>
-              <tr><td style="font-weight:500">Meme Page 2</td><td class="num">2,100</td><td class="num">51K</td><td class="num">1,980</td><td class="num">130</td><td class="num">320</td><td class="num">41</td><td class="num">4.4%</td><td class="num">55%</td><td class="num">30%</td></tr>
-              <tr><td style="font-weight:500">Pacific Spirit IG</td><td class="num">1,840</td><td class="num">22K</td><td class="num">540</td><td class="num">88</td><td class="num">42</td><td class="num">84</td><td class="num">3.1%</td><td class="num">—</td><td class="num">—</td></tr>
-              <tr><td style="font-weight:500">Naomi Vale IG</td><td class="num">360</td><td class="num">9K</td><td class="num">198</td><td class="num">24</td><td class="num">18</td><td class="num">31</td><td class="num">2.7%</td><td class="num">—</td><td class="num">—</td></tr>
+              <tr><td style="font-weight:500">Naomi Vale TT</td><td class="num" id="ebNaomiFollowers">—</td><td class="num" id="ebNaomiViews">—</td><td class="num" id="ebNaomiLikes">—</td><td class="num" id="ebNaomiComments">—</td><td class="num" id="ebNaomiShares">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+              <tr><td style="font-weight:500">Pacific Spirit TT</td><td class="num" id="ebPSFollowers">—</td><td class="num" id="ebPSViews">—</td><td class="num" id="ebPSLikes">—</td><td class="num" id="ebPSComments">—</td><td class="num" id="ebPSShares">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
             </tbody>
           </table>
         </div>
@@ -403,43 +356,14 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
       <div class="analytics-grid">
         <div class="card">
           <div class="card-header"><span class="card-title">Follower Growth — 6 Weeks</span></div>
-          <div class="card-body"><div class="chart-area">
-            <svg viewBox="0 0 400 130" preserveAspectRatio="none">
-              <defs><linearGradient id="fGrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B5840" stop-opacity="0.12"/><stop offset="100%" stop-color="#3B5840" stop-opacity="0"/></linearGradient></defs>
-              <line x1="30" y1="10" x2="390" y2="10" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="30" y1="50" x2="390" y2="50" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="30" y1="90" x2="390" y2="90" stroke="#E8E2D9" stroke-width="1"/>
-              <text x="24" y="13" text-anchor="end" class="y-lbl">25K</text>
-              <text x="24" y="53" text-anchor="end" class="y-lbl">20K</text>
-              <text x="24" y="93" text-anchor="end" class="y-lbl">15K</text>
-              <path d="M60,95 L120,88 L185,80 L250,68 L315,54 L375,32 L375,100 L60,100 Z" fill="url(#fGrd)"/>
-              <path d="M60,95 L120,88 L185,80 L250,68 L315,54 L375,32" stroke="#3B5840" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="60" cy="95" r="3" fill="#3B5840"/><circle cx="120" cy="88" r="3" fill="#3B5840"/>
-              <circle cx="185" cy="80" r="3" fill="#3B5840"/><circle cx="250" cy="68" r="3" fill="#3B5840"/>
-              <circle cx="315" cy="54" r="3" fill="#3B5840"/><circle cx="375" cy="32" r="4" fill="#3B5840" stroke="white" stroke-width="2"/>
-              <text x="60"  y="118" text-anchor="middle" class="x-lbl">W1</text>
-              <text x="120" y="118" text-anchor="middle" class="x-lbl">W2</text>
-              <text x="185" y="118" text-anchor="middle" class="x-lbl">W3</text>
-              <text x="250" y="118" text-anchor="middle" class="x-lbl">W4</text>
-              <text x="315" y="118" text-anchor="middle" class="x-lbl">W5</text>
-              <text x="375" y="118" text-anchor="middle" class="x-lbl">W6</text>
-            </svg>
+          <div class="card-body"><div class="chart-area empty-state" style="display:flex;align-items:center;justify-content:center;height:130px;">
+            <p>No trend data yet — connect remaining accounts</p>
           </div></div>
         </div>
         <div class="card">
           <div class="card-header"><span class="card-title">Platform Split — Views</span></div>
-          <div class="card-body" style="display:flex;align-items:center;gap:24px;">
-            <svg viewBox="0 0 120 120" width="110" height="110" style="flex-shrink:0">
-              <circle cx="60" cy="60" r="45" fill="none" stroke="#E8E2D9" stroke-width="18"/>
-              <circle cx="60" cy="60" r="45" fill="none" stroke="#E8173A" stroke-width="18" stroke-dasharray="197 85" stroke-dashoffset="-21" stroke-linecap="butt"/>
-              <circle cx="60" cy="60" r="45" fill="none" stroke="#9B2D8A" stroke-width="18" stroke-dasharray="25 257" stroke-dashoffset="-218" stroke-linecap="butt"/>
-              <text x="60" y="56" text-anchor="middle" style="font-size:14px;font-weight:700;fill:#1A1510">91%</text>
-              <text x="60" y="70" text-anchor="middle" style="font-size:9px;fill:#7A7060">TikTok</text>
-            </svg>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--tt)"></div><span style="font-size:12px;font-weight:500">TikTok</span></div><div style="font-size:18px;font-weight:700;font-family:'Courier New',monospace">281K</div><div style="font-size:10.5px;color:var(--muted)">91% of views</div></div>
-              <div><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--ig)"></div><span style="font-size:12px;font-weight:500">Instagram</span></div><div style="font-size:18px;font-weight:700;font-family:'Courier New',monospace">31K</div><div style="font-size:10.5px;color:var(--muted)">9% of views</div></div>
-            </div>
+          <div class="card-body empty-state">
+            <p>No data yet — connect remaining accounts</p>
           </div>
         </div>
       </div>
@@ -450,22 +374,15 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
   <div class="page" id="page-content">
     <div class="content">
       <div class="kpi-row">
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Posts This Week</div><div class="kpi-value">34</div><span class="kpi-change up">+6 WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Top Post Views</div><div class="kpi-value">48.2K</div><span class="kpi-change up">+12.1K WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Avg Views / Post</div><div class="kpi-value">9.2K</div><span class="kpi-change up">+1.4K WoW</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Total Saves</div><div class="kpi-value">312</div><span class="kpi-change up">+41 WoW</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Posts This Week</div><div class="kpi-value">—</div><span class="kpi-sub">No post-level data yet</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Top Post Views</div><div class="kpi-value">—</div><span class="kpi-sub">No post-level data yet</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Avg Views / Post</div><div class="kpi-value">—</div><span class="kpi-sub">No post-level data yet</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Total Saves</div><div class="kpi-value">—</div><span class="kpi-sub">No post-level data yet</span></div>
       </div>
       <div class="card">
         <div class="card-header"><span class="card-title">Top Posts This Week</span></div>
-        <div class="card-body">
-          <div class="content-grid">
-            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#c8a87a,#7a5230)"></div><div class="post-card-body"><div class="post-card-title">everything shower routine</div><div class="post-card-meta"><span>Naomi Vale TT</span><span>3s ret: 68%</span></div><div class="post-card-views">48.2K views</div></div></div>
-            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#a0bc98,#3B5840)"></div><div class="post-card-body"><div class="post-card-title">tell no one about this shampoo</div><div class="post-card-meta"><span>Meme Page 1</span><span>3s ret: 61%</span></div><div class="post-card-views">31.4K views</div></div></div>
-            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#dfc09a,#b87040)"></div><div class="post-card-body"><div class="post-card-title">my morning skin routine</div><div class="post-card-meta"><span>Naomi Vale TT</span><span>3s ret: 55%</span></div><div class="post-card-views">22.1K views</div></div></div>
-            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#b0ceb8,#507858)"></div><div class="post-card-body"><div class="post-card-title">4 things keeping me glowing</div><div class="post-card-meta"><span>Pacific Spirit IG</span><span>84 saves</span></div><div class="post-card-views">18.7K views</div></div></div>
-            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#d0b898,#907050)"></div><div class="post-card-body"><div class="post-card-title">clean girl essentials</div><div class="post-card-meta"><span>Meme Page 2</span><span>3s ret: 52%</span></div><div class="post-card-views">14.3K views</div></div></div>
-            <div class="post-card"><div class="post-card-thumb" style="background:linear-gradient(135deg,#c4d4bc,#607860)"></div><div class="post-card-body"><div class="post-card-title">what's actually in my shower</div><div class="post-card-meta"><span>Naomi Vale TT</span><span>3s ret: 49%</span></div><div class="post-card-views">11.8K views</div></div></div>
-          </div>
+        <div class="card-body empty-state">
+          <p>No post-level data yet — only account-level metrics are scraped today</p>
         </div>
       </div>
     </div>
@@ -476,61 +393,22 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
     <div class="content">
       <div class="card">
         <div class="card-header"><span class="card-title">Conversion Funnel · Social to Shopify</span></div>
-        <div class="card-body">
-          <div class="funnel-wrap">
-            <div class="funnel-step"><div class="funnel-val">312K</div><div class="funnel-lbl">Total Views</div></div>
-            <div class="funnel-arrow-col"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#C8BFAF" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg></div>
-            <div class="funnel-step"><div class="funnel-val">1,560</div><div class="funnel-lbl">Bio Clicks</div><div class="funnel-pct">0.50%</div></div>
-            <div class="funnel-arrow-col"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#C8BFAF" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg></div>
-            <div class="funnel-step"><div class="funnel-val">468</div><div class="funnel-lbl">Shopify Visits</div><div class="funnel-pct">30.0%</div></div>
-            <div class="funnel-arrow-col"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#C8BFAF" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg></div>
-            <div class="funnel-step"><div class="funnel-val">28</div><div class="funnel-lbl">Orders</div><div class="funnel-pct">6.0%</div></div>
-            <div class="funnel-arrow-col"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#C8BFAF" stroke-width="1.5"><polyline points="3,2 7,5 3,8"/></svg></div>
-            <div class="funnel-step"><div class="funnel-val">$756</div><div class="funnel-lbl">DTC Revenue</div><div class="funnel-pct">$27 AOV</div></div>
-          </div>
+        <div class="card-body empty-state">
+          <p>No funnel data yet — no Shopify/UTM tracking connected</p>
         </div>
       </div>
       <div class="analytics-grid">
         <div class="card">
           <div class="card-header"><span class="card-title">Funnel by Source Account</span></div>
-          <div class="card-body" style="padding-top:12px;">
-            <table class="stat-table">
-              <thead><tr><th>Account</th><th>Bio Clicks</th><th>Shopify Visits</th><th>Orders</th><th>CVR</th></tr></thead>
-              <tbody>
-                <tr><td style="font-weight:500">Naomi Vale TT</td><td class="num">820</td><td class="num">246</td><td class="num">16</td><td class="num">1.95%</td></tr>
-                <tr><td style="font-weight:500">Meme Page 1</td><td class="num">410</td><td class="num">123</td><td class="num">7</td><td class="num">1.71%</td></tr>
-                <tr><td style="font-weight:500">Meme Page 2</td><td class="num">190</td><td class="num">57</td><td class="num">3</td><td class="num">1.58%</td></tr>
-                <tr><td style="font-weight:500">Pacific Spirit IG</td><td class="num">108</td><td class="num">32</td><td class="num">2</td><td class="num">1.85%</td></tr>
-                <tr><td style="font-weight:500">Naomi Vale IG</td><td class="num">32</td><td class="num">10</td><td class="num">0</td><td class="num">0.00%</td></tr>
-              </tbody>
-            </table>
+          <div class="card-body empty-state">
+            <p>No funnel data yet</p>
           </div>
         </div>
         <div class="card">
           <div class="card-header"><span class="card-title">Weekly Funnel Trend</span></div>
-          <div class="card-body"><div class="chart-area">
-            <svg viewBox="0 0 360 130" preserveAspectRatio="none">
-              <line x1="30" y1="10" x2="350" y2="10" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="30" y1="50" x2="350" y2="50" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="30" y1="90" x2="350" y2="90" stroke="#E8E2D9" stroke-width="1"/>
-              <text x="24" y="13" text-anchor="end" class="y-lbl">40</text>
-              <text x="24" y="53" text-anchor="end" class="y-lbl">20</text>
-              <text x="24" y="93" text-anchor="end" class="y-lbl">0</text>
-              <path d="M55,88 L110,82 L175,74 L240,62 L305,48 L345,32" stroke="#C4894F" stroke-width="2" fill="none" stroke-linecap="round"/>
-              <circle cx="55" cy="88" r="3" fill="#C4894F"/>
-              <circle cx="110" cy="82" r="3" fill="#C4894F"/>
-              <circle cx="175" cy="74" r="3" fill="#C4894F"/>
-              <circle cx="240" cy="62" r="3" fill="#C4894F"/>
-              <circle cx="305" cy="48" r="3" fill="#C4894F"/>
-              <circle cx="345" cy="32" r="4" fill="#C4894F" stroke="white" stroke-width="2"/>
-              <text x="55"  y="118" text-anchor="middle" class="x-lbl">W1</text>
-              <text x="110" y="118" text-anchor="middle" class="x-lbl">W2</text>
-              <text x="175" y="118" text-anchor="middle" class="x-lbl">W3</text>
-              <text x="240" y="118" text-anchor="middle" class="x-lbl">W4</text>
-              <text x="305" y="118" text-anchor="middle" class="x-lbl">W5</text>
-              <text x="345" y="118" text-anchor="middle" class="x-lbl">W6</text>
-            </svg>
-          </div></div>
+          <div class="card-body empty-state" style="display:flex;align-items:center;justify-content:center;height:130px;">
+            <p>No funnel data yet</p>
+          </div>
         </div>
       </div>
     </div>
@@ -557,24 +435,8 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
         </div>
         <div class="card">
           <div class="card-header"><span class="card-title">Recent Links</span></div>
-          <div class="card-body">
-            <div style="display:flex;flex-direction:column;gap:0;">
-              <div style="padding:9px 0;border-bottom:1px solid var(--sand);">
-                <div style="font-size:11px;color:var(--muted);font-family:'Courier New',monospace;margin-bottom:3px;">tiktok · naomi_vale · may_everything_shower</div>
-                <div style="font-size:10.5px;color:var(--brown);font-family:'Courier New',monospace;word-break:break-all;color:var(--green)">shoppacificspirit.com?utm_source=tiktok...</div>
-                <div style="font-size:10px;color:var(--muted);margin-top:3px;">May 18 · 14 clicks</div>
-              </div>
-              <div style="padding:9px 0;border-bottom:1px solid var(--sand);">
-                <div style="font-size:11px;color:var(--muted);font-family:'Courier New',monospace;margin-bottom:3px;">instagram · brand · apr_brand_launch</div>
-                <div style="font-size:10.5px;color:var(--green);font-family:'Courier New',monospace;word-break:break-all">shoppacificspirit.com?utm_source=instagram...</div>
-                <div style="font-size:10px;color:var(--muted);margin-top:3px;">Apr 30 · 8 clicks</div>
-              </div>
-              <div style="padding:9px 0;">
-                <div style="font-size:11px;color:var(--muted);font-family:'Courier New',monospace;margin-bottom:3px;">tiktok · meme_page_1 · apr_clean_girl</div>
-                <div style="font-size:10.5px;color:var(--green);font-family:'Courier New',monospace;word-break:break-all">shoppacificspirit.com?utm_source=tiktok...</div>
-                <div style="font-size:10px;color:var(--muted);margin-top:3px;">Apr 22 · 6 clicks</div>
-              </div>
-            </div>
+          <div class="card-body empty-state">
+            <p>No link history yet — this list isn't wired to a real link tracker</p>
           </div>
         </div>
       </div>
@@ -592,29 +454,8 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
       <div class="charts-row">
         <div class="card">
           <div class="card-header"><span class="card-title">Views — Last 6 Weeks</span></div>
-          <div class="card-body"><div class="chart-area">
-            <svg viewBox="0 0 500 140" preserveAspectRatio="none">
-              <defs><linearGradient id="aGrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B5840" stop-opacity="0.15"/><stop offset="100%" stop-color="#3B5840" stop-opacity="0"/></linearGradient></defs>
-              <line x1="38" y1="10" x2="492" y2="10" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="38" y1="45" x2="492" y2="45" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="38" y1="80" x2="492" y2="80" stroke="#E8E2D9" stroke-width="1"/>
-              <line x1="38" y1="110" x2="492" y2="110" stroke="#E8E2D9" stroke-width="1"/>
-              <text x="32" y="13" text-anchor="end" class="y-lbl">160K</text>
-              <text x="32" y="48" text-anchor="end" class="y-lbl">120K</text>
-              <text x="32" y="83" text-anchor="end" class="y-lbl">80K</text>
-              <text x="32" y="113" text-anchor="end" class="y-lbl">40K</text>
-              <path d="M75,105 L155,95 L230,82 L305,64 L380,46 L455,18 L455,115 L75,115 Z" fill="url(#aGrd)"/>
-              <path d="M75,105 L155,95 L230,82 L305,64 L380,46 L455,18" stroke="#3B5840" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="75" cy="105" r="3" fill="#3B5840"/><circle cx="155" cy="95" r="3" fill="#3B5840"/>
-              <circle cx="230" cy="82" r="3" fill="#3B5840"/><circle cx="305" cy="64" r="3" fill="#3B5840"/>
-              <circle cx="380" cy="46" r="3" fill="#3B5840"/><circle cx="455" cy="18" r="4" fill="#3B5840" stroke="white" stroke-width="2"/>
-              <text x="75"  y="130" text-anchor="middle" class="x-lbl">W1</text>
-              <text x="155" y="130" text-anchor="middle" class="x-lbl">W2</text>
-              <text x="230" y="130" text-anchor="middle" class="x-lbl">W3</text>
-              <text x="305" y="130" text-anchor="middle" class="x-lbl">W4</text>
-              <text x="380" y="130" text-anchor="middle" class="x-lbl">W5</text>
-              <text x="455" y="130" text-anchor="middle" class="x-lbl">W6</text>
-            </svg>
+          <div class="card-body"><div class="chart-area empty-state" style="display:flex;align-items:center;justify-content:center;height:152px;">
+            <p>No trend data yet</p>
           </div></div>
         </div>
         <div class="card">
@@ -645,13 +486,114 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
 
 <script>
 const ACCT_DATA = {
-  'naomi-tt': { name:'Naomi Vale', sub:'TikTok · AI Persona', platform:'tt', followers:'14,200', views:'148K', eng:'5.2%', ret:'68%', posts:'12' },
-  'meme1':    { name:'Meme Page 1', sub:'TikTok', platform:'tt', followers:'6,300', views:'82K', eng:'3.8%', ret:'61%', posts:'9' },
-  'meme2':    { name:'Meme Page 2', sub:'TikTok', platform:'tt', followers:'2,100', views:'51K', eng:'4.4%', ret:'55%', posts:'8' },
-  'ps-ig':    { name:'Pacific Spirit', sub:'Instagram · Brand', platform:'ig', followers:'1,840', views:'22K', eng:'3.1%', ret:'—', posts:'3' },
-  'naomi-ig': { name:'Naomi Vale', sub:'Instagram · AI Persona', platform:'ig', followers:'360', views:'9K', eng:'2.7%', ret:'—', posts:'2' }
+  'naomi-tt': { name:'Naomi Vale', sub:'TikTok · AI Persona', platform:'tt', followers:'—', views:'—', eng:'—', ret:'—', posts:'—' },
+  'ps-tt':    { name:'Pacific Spirit', sub:'TikTok · Brand', platform:'tt', followers:'—', views:'—', eng:'—', ret:'—', posts:'—' }
 };
 const notes = {};
+
+/* ── Live Supabase metrics (tiktok_metrics table) ──────────────────────
+   Pulls the latest row for the Naomi Vale TikTok account and overwrites
+   the mock numbers above wherever real data is available. Falls back to
+   the static mock values if the fetch fails for any reason. */
+const SUPABASE_URL = 'https://uyojsutabhachdvdlbpy.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_hHVf8zrhgsJZGizFmgwjMw_BH1Zz2a3';
+
+function fmtCount(n) {
+  if (n === null || n === undefined) return '—';
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  return n.toLocaleString('en-US');
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+// Maps a Supabase `account` value to the DOM id prefixes / ACCT_DATA key
+// used for that account's elements in this page.
+const ACCOUNT_SOURCES = [
+  { account: 'naomi_vale',     acctKey: 'naomi-tt', abPrefix: 'abNaomi', ebPrefix: 'ebNaomi', barPrefix: 'barNaomi', name: 'Naomi Vale', sub: 'TikTok · AI Persona' },
+  { account: 'pacific_spirit', acctKey: 'ps-tt',    abPrefix: 'abPS',    ebPrefix: 'ebPS',    barPrefix: 'barPS',    name: 'Pacific Spirit', sub: 'TikTok · Brand' }
+];
+
+let lastSyncedAt = null;
+const ACCOUNT_METRICS = {}; // raw latest row per account, keyed by src.account
+
+async function loadAccountMetrics(src) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/tiktok_metrics?account=eq.${src.account}&order=recorded_at.desc&limit=1`,
+      { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    if (!res.ok) throw new Error('Supabase fetch failed: ' + res.status);
+    const rows = await res.json();
+    if (!rows.length) return; // not scraped yet — leave the "—" placeholders
+
+    const m = rows[0];
+    ACCOUNT_METRICS[src.account] = m;
+
+    // Keep the in-memory mock model in sync so the Account Detail page
+    // (rendered from ACCT_DATA) also reflects live numbers.
+    ACCT_DATA[src.acctKey].followers = fmtCount(m.followers);
+    ACCT_DATA[src.acctKey].views = fmtCount(m.video_views);
+
+    // Overview > Account Breakdown table
+    setText(src.abPrefix + 'Followers', fmtCount(m.followers));
+    setText(src.abPrefix + 'Views', fmtCount(m.video_views));
+
+    // Analytics > Engagement Breakdown table
+    setText(src.ebPrefix + 'Followers', fmtCount(m.followers));
+    setText(src.ebPrefix + 'Views', fmtCount(m.video_views));
+    setText(src.ebPrefix + 'Likes', fmtCount(m.likes));
+    setText(src.ebPrefix + 'Comments', fmtCount(m.comments));
+    setText(src.ebPrefix + 'Shares', fmtCount(m.shares));
+
+    // Overview > Views by Account bar (value only — width left at 0 until
+    // there's a meaningful basis for relative comparison)
+    setText(src.barPrefix + 'ViewsVal', fmtCount(m.video_views));
+
+    // If this account's detail page happens to be open, refresh it.
+    const onAcctPage = document.getElementById('page-account').classList.contains('active');
+    const acctSelected = document.querySelector(`[data-acct="${src.acctKey}"]`)?.classList.contains('selected');
+    if (onAcctPage && acctSelected) {
+      navigateAccount(src.acctKey, src.name, src.sub, 'tt');
+    }
+
+    if (m.recorded_at && (!lastSyncedAt || new Date(m.recorded_at) > lastSyncedAt)) {
+      lastSyncedAt = new Date(m.recorded_at);
+      const synced = document.querySelector('.sidebar-bottom');
+      if (synced) {
+        synced.textContent = 'Last synced ' + lastSyncedAt.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      }
+    }
+  } catch (err) {
+    console.error(`Live metrics load failed for ${src.account}, showing placeholder data:`, err);
+  }
+}
+
+function updateAggregateKPIs() {
+  const accountsWithData = Object.keys(ACCOUNT_METRICS);
+  if (!accountsWithData.length) return; // leave the "—" placeholders
+
+  const totalFollowers = accountsWithData.reduce((sum, a) => sum + (ACCOUNT_METRICS[a].followers || 0), 0);
+  const totalViews = accountsWithData.reduce((sum, a) => sum + (ACCOUNT_METRICS[a].video_views || 0), 0);
+  const connectedLabel = accountsWithData.length === ACCOUNT_SOURCES.length
+    ? `Across all ${accountsWithData.length} connected accounts`
+    : `Across ${accountsWithData.length} of ${ACCOUNT_SOURCES.length} connected accounts`;
+
+  setText('kpiTotalFollowers', fmtCount(totalFollowers));
+  setText('kpiTotalFollowersSub', connectedLabel);
+  setText('kpiTotalViews', fmtCount(totalViews));
+  setText('kpiTotalViewsSub', connectedLabel);
+}
+
+async function loadLiveMetrics() {
+  await Promise.all(ACCOUNT_SOURCES.map(loadAccountMetrics));
+  updateAggregateKPIs();
+}
+
+document.addEventListener('DOMContentLoaded', loadLiveMetrics);
 
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
