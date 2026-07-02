@@ -290,8 +290,8 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
       <div class="kpi-row">
         <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--green)"></div>Total Followers</div><div class="kpi-value" id="kpiTotalFollowers">—</div><span class="kpi-sub" id="kpiTotalFollowersSub">No data yet</span></div>
         <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--tt)"></div>Total Views</div><div class="kpi-value" id="kpiTotalViews">—</div><span class="kpi-sub" id="kpiTotalViewsSub">No data yet</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Avg Eng. Rate</div><div class="kpi-value">—</div><span class="kpi-sub">Not in TikTok Studio scrape</span></div>
-        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Posts This Week</div><div class="kpi-value">—</div><span class="kpi-sub">Not in TikTok Studio scrape</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--accent)"></div>Avg Eng. Rate</div><div class="kpi-value" id="kpiAvgEng">—</div><span class="kpi-sub" id="kpiAvgEngSub">No data yet</span></div>
+        <div class="kpi-card"><div class="kpi-label"><div class="kpi-dot" style="background:var(--ig)"></div>Posts This Week</div><div class="kpi-value" id="kpiPostsWeek">—</div><span class="kpi-sub" id="kpiPostsWeekSub">No data yet</span></div>
       </div>
       <div class="charts-row">
         <div class="card">
@@ -303,8 +303,8 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
               <div class="legend-item"><div class="legend-line" style="background:repeating-linear-gradient(to right,var(--ig) 0,var(--ig) 3px,transparent 3px,transparent 6px)"></div>Instagram</div>
             </div>
           </div>
-          <div class="card-body"><div class="chart-area empty-state" style="display:flex;align-items:center;justify-content:center;height:152px;">
-            <p>No trend data yet — connect remaining accounts</p>
+          <div class="card-body"><div class="chart-area" id="weeklyTrendChart" style="display:flex;align-items:center;justify-content:center;height:152px;">
+            <p style="color:var(--muted);font-size:12px;">No trend data yet — connect remaining accounts</p>
           </div></div>
         </div>
         <div class="card">
@@ -323,8 +323,8 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
           <table class="acct-table">
             <thead><tr><th>Account</th><th>Platform</th><th>Followers</th><th>Views</th><th>Eng. Rate</th><th>WoW Followers</th><th>Posts</th><th>Status</th></tr></thead>
             <tbody>
-              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#E8173A" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#E8173A" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="acct-main-label">Naomi Vale</div><div class="acct-sublabel">AI persona · disclosed</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num" id="abNaomiFollowers">—</td><td class="num" id="abNaomiViews">—</td><td class="num">—</td><td><span class="chg">—</span></td><td class="num">—</td><td><span class="badge badge-slow">Live (partial)</span></td></tr>
-              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#E8173A" stroke-width="1.5"/><line x1="5" y1="8" x2="11" y2="8" stroke="#E8173A" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="#E8173A" stroke-width="1.5"/></svg></div><div><div class="acct-main-label">Pacific Spirit</div><div class="acct-sublabel">Brand account</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num" id="abPSFollowers">—</td><td class="num" id="abPSViews">—</td><td class="num">—</td><td><span class="chg">—</span></td><td class="num">—</td><td><span class="badge badge-slow">Not connected</span></td></tr>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#E8173A" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#E8173A" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="acct-main-label">Naomi Vale</div><div class="acct-sublabel">AI persona · disclosed</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num" id="abNaomiFollowers">—</td><td class="num" id="abNaomiViews">—</td><td class="num" id="abNaomiEng">—</td><td><span class="chg">—</span></td><td class="num" id="abNaomiPosts">—</td><td><span class="badge badge-slow" id="abNaomiStatus">Not connected</span></td></tr>
+              <tr><td><div class="acct-name-cell"><div class="acct-avatar tt"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#E8173A" stroke-width="1.5"/><line x1="5" y1="8" x2="11" y2="8" stroke="#E8173A" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="11" stroke="#E8173A" stroke-width="1.5"/></svg></div><div><div class="acct-main-label">Pacific Spirit</div><div class="acct-sublabel">Brand account</div></div></div></td><td><span class="badge badge-tt">TikTok</span></td><td class="num" id="abPSFollowers">—</td><td class="num" id="abPSViews">—</td><td class="num" id="abPSEng">—</td><td><span class="chg">—</span></td><td class="num" id="abPSPosts">—</td><td><span class="badge badge-slow" id="abPSStatus">Not connected</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -347,8 +347,8 @@ textarea.note-input:focus { border-color: var(--green); background: white; }
           <table class="stat-table">
             <thead><tr><th>Account</th><th>Followers</th><th>Views</th><th>Likes</th><th>Comments</th><th>Shares</th><th>Saves</th><th>Eng. Rate</th><th>3-Sec Ret.</th><th>Completion</th></tr></thead>
             <tbody>
-              <tr><td style="font-weight:500">Naomi Vale TT</td><td class="num" id="ebNaomiFollowers">—</td><td class="num" id="ebNaomiViews">—</td><td class="num" id="ebNaomiLikes">—</td><td class="num" id="ebNaomiComments">—</td><td class="num" id="ebNaomiShares">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-              <tr><td style="font-weight:500">Pacific Spirit TT</td><td class="num" id="ebPSFollowers">—</td><td class="num" id="ebPSViews">—</td><td class="num" id="ebPSLikes">—</td><td class="num" id="ebPSComments">—</td><td class="num" id="ebPSShares">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+              <tr><td style="font-weight:500">Naomi Vale TT</td><td class="num" id="ebNaomiFollowers">—</td><td class="num" id="ebNaomiViews">—</td><td class="num" id="ebNaomiLikes">—</td><td class="num" id="ebNaomiComments">—</td><td class="num" id="ebNaomiShares">—</td><td class="num">—</td><td class="num" id="ebNaomiEng">—</td><td class="num">—</td><td class="num">—</td></tr>
+              <tr><td style="font-weight:500">Pacific Spirit TT</td><td class="num" id="ebPSFollowers">—</td><td class="num" id="ebPSViews">—</td><td class="num" id="ebPSLikes">—</td><td class="num" id="ebPSComments">—</td><td class="num" id="ebPSShares">—</td><td class="num">—</td><td class="num" id="ebPSEng">—</td><td class="num">—</td><td class="num">—</td></tr>
             </tbody>
           </table>
         </div>
@@ -549,6 +549,26 @@ async function loadAccountMetrics(src) {
     setText(src.ebPrefix + 'Comments', fmtCount(m.comments));
     setText(src.ebPrefix + 'Shares', fmtCount(m.shares));
 
+    // Engagement rate — derived from real scraped fields, never fabricated.
+    // (likes + comments + shares) / views. Only computed when views > 0.
+    const engRate = m.video_views > 0
+      ? ((m.likes + m.comments + m.shares) / m.video_views * 100)
+      : null;
+    const engRateStr = engRate === null ? '—' : engRate.toFixed(1) + '%';
+    setText(src.abPrefix + 'Eng', engRateStr);
+    setText(src.ebPrefix + 'Eng', engRateStr);
+
+    // Posts this week — only real if TikTok Studio's Content tab (last 7
+    // days) has actually been scraped for this account. Null stays "—".
+    setText(src.abPrefix + 'Posts', (m.posts_count === null || m.posts_count === undefined) ? '—' : String(m.posts_count));
+
+    // Status badge reflects real connection state, not a hardcoded label.
+    const statusEl = document.getElementById(src.abPrefix + 'Status');
+    if (statusEl) {
+      statusEl.textContent = 'Live';
+      statusEl.className = 'badge badge-active';
+    }
+
     // Overview > Views by Account bar (value only — width left at 0 until
     // there's a meaningful basis for relative comparison)
     setText(src.barPrefix + 'ViewsVal', fmtCount(m.video_views));
@@ -586,6 +606,87 @@ function updateAggregateKPIs() {
   setText('kpiTotalFollowersSub', connectedLabel);
   setText('kpiTotalViews', fmtCount(totalViews));
   setText('kpiTotalViewsSub', connectedLabel);
+
+  // Avg Eng. Rate — real (likes+comments+shares)/views summed across every
+  // account that has reported numbers. Recomputed fresh on every load.
+  const totalEngActions = accountsWithData.reduce((sum, a) => {
+    const m = ACCOUNT_METRICS[a];
+    return sum + (m.likes || 0) + (m.comments || 0) + (m.shares || 0);
+  }, 0);
+  if (totalViews > 0) {
+    setText('kpiAvgEng', (totalEngActions / totalViews * 100).toFixed(1) + '%');
+    setText('kpiAvgEngSub', connectedLabel);
+  }
+
+  // Posts This Week — only counts accounts where the Content tab has
+  // actually been scraped (posts_count is not null). Accounts pending
+  // reconnection are excluded from the sum rather than assumed to be 0.
+  const accountsWithPosts = accountsWithData.filter(a => ACCOUNT_METRICS[a].posts_count !== null && ACCOUNT_METRICS[a].posts_count !== undefined);
+  if (accountsWithPosts.length) {
+    const totalPosts = accountsWithPosts.reduce((sum, a) => sum + ACCOUNT_METRICS[a].posts_count, 0);
+    const postsLabel = accountsWithPosts.length === ACCOUNT_SOURCES.length
+      ? `Across all ${accountsWithPosts.length} connected accounts`
+      : `Across ${accountsWithPosts.length} of ${ACCOUNT_SOURCES.length} connected accounts`;
+    setText('kpiPostsWeek', String(totalPosts));
+    setText('kpiPostsWeekSub', postsLabel);
+  }
+
+  renderWeeklyTrendChart(accountsWithData);
+}
+
+// Renders a real line chart from each account's daily_views (jsonb keyed by
+// ISO date -> view count, scraped from TikTok Studio's own 7-day chart
+// tooltips). Accounts without daily_views yet are simply omitted from the
+// chart rather than plotted as zero/fake data.
+function renderWeeklyTrendChart(accountsWithData) {
+  const container = document.getElementById('weeklyTrendChart');
+  if (!container) return;
+
+  const accountsWithTrend = accountsWithData.filter(a => ACCOUNT_METRICS[a].daily_views);
+  if (!accountsWithTrend.length) return; // leave existing empty-state message
+
+  // Union of all dates present, sorted chronologically.
+  const dateSet = new Set();
+  accountsWithTrend.forEach(a => Object.keys(ACCOUNT_METRICS[a].daily_views).forEach(d => dateSet.add(d)));
+  const dates = Array.from(dateSet).sort();
+  if (!dates.length) return;
+
+  const colors = { naomi_vale: 'var(--tt)', pacific_spirit: '#B0555A' };
+  const series = accountsWithTrend.map(a => ({
+    account: a,
+    color: colors[a] || 'var(--muted)',
+    values: dates.map(d => ACCOUNT_METRICS[a].daily_views[d] ?? null)
+  }));
+
+  const maxVal = Math.max(1, ...series.flatMap(s => s.values.filter(v => v !== null)));
+  const W = 1000, H = 152, padL = 30, padR = 10, padT = 10, padB = 24;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const xStep = dates.length > 1 ? plotW / (dates.length - 1) : 0;
+
+  const toXY = (i, v) => [padL + i * xStep, padT + plotH - (v / maxVal) * plotH];
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%;overflow:visible;">`;
+  series.forEach(s => {
+    const pts = s.values.map((v, i) => v === null ? null : toXY(i, v)).filter(Boolean);
+    if (pts.length < 1) return;
+    const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    svg += `<path d="${path}" fill="none" stroke="${s.color}" stroke-width="2"/>`;
+    pts.forEach(p => { svg += `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="${s.color}"/>`; });
+  });
+  dates.forEach((d, i) => {
+    const x = padL + i * xStep;
+    const label = new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    svg += `<text x="${x.toFixed(1)}" y="${H - 4}" class="x-lbl" text-anchor="middle">${label}</text>`;
+  });
+  svg += `</svg>`;
+
+  const missing = ACCOUNT_SOURCES.filter(src => !accountsWithTrend.includes(src.account));
+  const note = missing.length
+    ? `<div style="font-size:10.5px;color:var(--muted);margin-top:4px;">Pending reconnect: ${missing.map(m => m.name).join(', ')}</div>`
+    : '';
+
+  container.style.display = 'block';
+  container.innerHTML = `<div style="height:${missing.length ? '134px' : '152px'};">${svg}</div>${note}`;
 }
 
 async function loadLiveMetrics() {
