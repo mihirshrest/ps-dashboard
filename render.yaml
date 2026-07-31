@@ -19,8 +19,8 @@ services:
     schedule: "*/15 * * * *"
     buildCommand: npm install --include=dev
     startCommand: npm run worker
-    envVarGroups:
-      - publisher-secrets
+    envVars:
+      - fromGroup: publisher-secrets
 
   - type: cron
     name: publisher-stats
@@ -30,5 +30,5 @@ services:
     schedule: "0 9 * * *"
     buildCommand: npm install --include=dev
     startCommand: npm run stats
-    envVarGroups:
-      - publisher-secrets
+    envVars:
+      - fromGroup: publisher-secrets
