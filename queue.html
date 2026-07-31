@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Queue</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #0B120E; }
+  body {
+    min-height: 100dvh;
+    font-family: Inter, system-ui, sans-serif;
+    color: #F6F2ED;
+  }
+  main {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 16px 120px;
+    min-height: 100dvh;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 22px 2px 16px;
+  }
+  .wordmark {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+  }
+  .count {
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #C4894F;
+  }
+  .muted { font-size: 14px; color: rgba(246,242,237,.55); line-height: 1.6; }
+  .empty { padding: 80px 8px; text-align: center; }
+  .empty-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 24px;
+    margin: 0 0 8px;
+  }
+  .card {
+    background: #141B16;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(246,242,237,.09);
+    transition: transform .26s cubic-bezier(.4,0,.2,1), opacity .26s ease;
+  }
+  .card.leaving-approve { transform: translateX(28%) rotate(3deg); opacity: 0; }
+  .card.leaving-reject { transform: translateX(-28%) rotate(-3deg); opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: opacity .15s ease; }
+    .card.leaving-approve, .card.leaving-reject { transform: none; opacity: 0; }
+  }
+  .media { position: relative; background: #000; aspect-ratio: 9 / 16; }
+  .media video, .media img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .mode-chip {
+    position: absolute;
+    top: 12px; left: 12px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    color: #F6F2ED;
+  }
+  .dots {
+    position: absolute;
+    bottom: 12px; left: 0; right: 0;
+    display: flex; gap: 6px; justify-content: center;
+  }
+  .dot {
+    width: 7px; height: 7px; border-radius: 999px; border: none; padding: 0;
+    background: rgba(246,242,237,.35);
+  }
+  .dot.active { background: #F6F2ED; }
+  .body { padding: 18px 18px 22px; }
+  .meta-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .account { font-size: 13px; font-weight: 600; color: #F6F2ED; }
+  .time { font-size: 12px; color: rgba(246,242,237,.5); }
+  .caption { font-size: 15px; line-height: 1.55; margin: 0 0 10px; white-space: pre-wrap; }
+  .tags { font-size: 13px; color: #C4894F; margin: 0 0 18px; line-height: 1.6; }
+  .tag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(246,242,237,.1);
+  }
+  .tag-label {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(246,242,237,.45);
+    margin: 0 0 3px;
+  }
+  .tag-value { font-size: 13px; margin: 0; color: #F6F2ED; }
+  .actions {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: 1fr 1.1fr 1.4fr;
+    gap: 10px;
+    background: linear-gradient(to top, rgba(11,18,14,.98) 70%, transparent);
+  }
+  .actions[hidden] { display: none; }
+  button { font-family: inherit; cursor: pointer; }
+  button:focus-visible { outline: 2px solid #C4894F; outline-offset: 2px; }
+  .btn-reject {
+    padding: 16px 0; border-radius: 12px;
+    border: 1px solid #8C4A3F; background: transparent;
+    color: #D9A79C; font-size: 15px; font-weight: 600;
+  }
+  .btn-copy {
+    padding: 16px 0; border-radius: 12px;
+    border: 1px solid rgba(246,242,237,.2); background: transparent;
+    color: #F6F2ED; font-size: 14px; font-weight: 500;
+  }
+  .btn-approve {
+    padding: 16px 0; border-radius: 12px;
+    border: none; background: #3B5840;
+    color: #F6F2ED; font-size: 16px; font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="wordmark">Queue</span>
+    <span class="count" id="count">—</span>
+  </header>
+
+  <p class="muted" id="loading">Loading the queue…</p>
+
+  <div class="empty" id="empty" hidden>
+    <p class="empty-title">Nothing to review.</p>
+    <p class="muted">The agent drops new posts here as it builds them. Check back tonight.</p>
+  </div>
+
+  <article class="card" id="card" hidden></article>
+
+  <div class="actions" id="actions" hidden>
+    <button class="btn-reject" id="btn-reject">Skip</button>
+    <button class="btn-copy" id="btn-copy">Copy caption</button>
+    <button class="btn-approve" id="btn-approve">Approve</button>
+  </div>
+</main>
+
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+  // Anon key + URL are meant to be public (RLS gates access); this page has
+  // no build step, so there is no env injection — fill these in directly.
+  const SUPABASE_URL = "https://uyojsutabhachdvdlbpy.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5b2pzdXRhYmhhY2hkdmRsYnB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NDEzNjcsImV4cCI6MjA5ODQxNzM2N30.7MiWH55CFSheVU8IQjnG29GnNjYZrwikB8nNT8ANjck";
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const els = {
+    count: document.getElementById("count"),
+    loading: document.getElementById("loading"),
+    empty: document.getElementById("empty"),
+    card: document.getElementById("card"),
+    actions: document.getElementById("actions"),
+    btnReject: document.getElementById("btn-reject"),
+    btnCopy: document.getElementById("btn-copy"),
+    btnApprove: document.getElementById("btn-approve"),
+  };
+
+  let posts = [];
+  let slide = 0;
+  let leaving = false;
+
+  function fmtWhen(iso) {
+    return new Date(iso).toLocaleString(undefined, {
+      weekday: "short", hour: "numeric", minute: "2-digit",
+    });
+  }
+
+  function tagRow(label, value) {
+    if (!value) return "";
+    return `<div><p class="tag-label">${label}</p><p class="tag-value">${value}</p></div>`;
+  }
+
+  function renderMedia(post) {
+    if (post.media_type === "video") {
+      return `<video src="${post.media_urls[0]}" ${post.cover_url ? `poster="${post.cover_url}"` : ""} controls playsinline></video>`;
+    }
+    const img = `<img src="${post.media_urls[slide]}" alt="" />`;
+    if (post.media_urls.length <= 1) return img;
+    const dots = post.media_urls
+      .map((_, i) => `<button class="dot ${i === slide ? "active" : ""}" data-slide="${i}" aria-label="Slide ${i + 1}"></button>`)
+      .join("");
+    return `${img}<div class="dots">${dots}</div>`;
+  }
+
+  function render() {
+    const current = posts[0];
+    els.loading.hidden = true;
+    els.count.textContent = posts.length === 0 ? "clear" : `${posts.length} waiting`;
+
+    if (!current) {
+      els.empty.hidden = false;
+      els.card.hidden = true;
+      els.actions.hidden = true;
+      return;
+    }
+
+    els.empty.hidden = true;
+    els.card.hidden = false;
+    els.actions.hidden = false;
+    els.card.className = "card";
+
+    const tags = (current.hashtags || [])
+      .map((t) => (t.startsWith("#") ? t : `#${t}`))
+      .join("  ");
+
+    els.card.innerHTML = `
+      <div class="media">
+        ${renderMedia(current)}
+        <span class="mode-chip" style="background:${current.publish_mode === "draft" ? "#C4894F" : "#3B5840"}">
+          ${current.publish_mode === "draft" ? "Draft · you add the sound" : "Posts on its own"}
+        </span>
+      </div>
+      <div class="body">
+        <div class="meta-row">
+          <span class="account">${current.social_accounts?.display_name ?? current.account_key}</span>
+          <span class="time">${fmtWhen(current.scheduled_for)}</span>
+        </div>
+        <p class="caption">${current.caption}</p>
+        ${tags ? `<p class="tags">${tags}</p>` : ""}
+        <dl class="tag-grid">
+          ${tagRow("Theme", current.theme)}
+          ${tagRow("Hook", current.hook_type)}
+          ${tagRow("Format", current.format)}
+          ${tagRow("Sound", current.sound_type)}
+        </dl>
+      </div>
+    `;
+
+    els.card.querySelectorAll(".dot").forEach((dot) => {
+      dot.addEventListener("click", () => {
+        slide = Number(dot.dataset.slide);
+        render();
+      });
+    });
+  }
+
+  async function load() {
+    const { data, error } = await supabase
+      .from("post_queue")
+      .select("*, social_accounts(display_name, platform)")
+      .eq("status", "pending")
+      .order("scheduled_for", { ascending: true });
+    if (error) {
+      console.error(error);
+      els.loading.textContent = "Couldn't load the queue — check the console.";
+      return;
+    }
+    posts = data ?? [];
+    render();
+  }
+
+  async function decide(status) {
+    const current = posts[0];
+    if (!current || leaving) return;
+    leaving = true;
+    els.card.classList.add(status === "approved" ? "leaving-approve" : "leaving-reject");
+    await supabase.from("post_queue").update({ status }).eq("id", current.id);
+    setTimeout(() => {
+      posts = posts.slice(1);
+      slide = 0;
+      leaving = false;
+      els.btnCopy.textContent = "Copy caption";
+      render();
+    }, 260);
+  }
+
+  els.btnReject.addEventListener("click", () => decide("rejected"));
+  els.btnApprove.addEventListener("click", () => decide("approved"));
+  els.btnCopy.addEventListener("click", () => {
+    const current = posts[0];
+    if (!current) return;
+    const tags = (current.hashtags || [])
+      .map((t) => (t.startsWith("#") ? t : `#${t}`))
+      .join(" ");
+    const text = tags ? `${current.caption}\n\n${tags}` : current.caption;
+    navigator.clipboard.writeText(text);
+    els.btnCopy.textContent = "Copied";
+    setTimeout(() => { els.btnCopy.textContent = "Copy caption"; }, 1800);
+  });
+
+  load();
+</script>
+</body>
+</html>

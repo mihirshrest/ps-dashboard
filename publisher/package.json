@@ -1,0 +1,17 @@
+{
+  "name": "ps-dashboard-publisher",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "worker": "tsx worker.ts",
+    "stats": "tsx stats.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}
