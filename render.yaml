@@ -1,0 +1,34 @@
+envVarGroups:
+  - name: publisher-secrets
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: POSTING_API_URL
+        sync: false
+      - key: POSTING_API_KEY
+        sync: false
+
+services:
+  - type: cron
+    name: publisher-worker
+    runtime: node
+    plan: starter
+    rootDir: publisher
+    schedule: "*/15 * * * *"
+    buildCommand: npm install --include=dev
+    startCommand: npm run worker
+    envVarGroups:
+      - publisher-secrets
+
+  - type: cron
+    name: publisher-stats
+    runtime: node
+    plan: starter
+    rootDir: publisher
+    schedule: "0 9 * * *"
+    buildCommand: npm install --include=dev
+    startCommand: npm run stats
+    envVarGroups:
+      - publisher-secrets
