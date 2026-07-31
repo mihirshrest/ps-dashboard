@@ -1,0 +1,25 @@
+name: Publisher Stats
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: publisher
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run stats
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          POSTING_API_URL: ${{ secrets.POSTING_API_URL }}
+          POSTING_API_KEY: ${{ secrets.POSTING_API_KEY }}
