@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Hooks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Poppins:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #0B120E; }
+  body {
+    min-height: 100dvh;
+    font-family: Inter, system-ui, sans-serif;
+    color: #F6F2ED;
+  }
+  main {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 16px 120px;
+    min-height: 100dvh;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 22px 2px 16px;
+  }
+  .wordmark {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+  }
+  .count {
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #C4894F;
+  }
+  .muted { font-size: 14px; color: rgba(246,242,237,.55); line-height: 1.6; }
+  .empty { padding: 80px 8px; text-align: center; }
+  .empty-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 24px;
+    margin: 0 0 8px;
+  }
+  .card {
+    background: #141B16;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(246,242,237,.09);
+    transition: transform .26s cubic-bezier(.4,0,.2,1), opacity .26s ease;
+  }
+  .card.leaving-approve { transform: translateX(28%) rotate(3deg); opacity: 0; }
+  .card.leaving-reject { transform: translateX(-28%) rotate(-3deg); opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: opacity .15s ease; }
+    .card.leaving-approve, .card.leaving-reject { transform: none; opacity: 0; }
+  }
+
+  /* Mock cover. Not the real slide — just close enough that judging the hook
+     here feels like judging it on the feed. */
+  .cover {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 28px 22px;
+    text-align: center;
+    background:
+      radial-gradient(120% 90% at 50% 0%, #3a332b 0%, #241f1a 55%, #191512 100%);
+  }
+  .cover::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,.25);
+  }
+  .cover-main, .cover-sub { position: relative; z-index: 1; }
+  .cover-main {
+    font-family: Poppins, system-ui, sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(26px, 7.6vw, 38px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    text-shadow:
+      2px 2px 0 rgba(0,0,0,.55), -2px 2px 0 rgba(0,0,0,.55),
+      2px -2px 0 rgba(0,0,0,.55), -2px -2px 0 rgba(0,0,0,.55);
+  }
+  .cover-sub {
+    font-family: Poppins, system-ui, sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(13px, 3.6vw, 16px);
+    line-height: 1.35;
+    color: rgba(246,242,237,.92);
+    text-shadow: 1px 1px 0 rgba(0,0,0,.5);
+  }
+  .slide-chip {
+    position: absolute;
+    top: 12px; right: 12px;
+    z-index: 1;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    background: rgba(11,18,14,.72);
+    color: #F6F2ED;
+  }
+
+  .body { padding: 18px 18px 22px; }
+  .meta-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .account { font-size: 13px; font-weight: 600; }
+  .time { font-size: 12px; color: rgba(246,242,237,.5); }
+  .concept { font-size: 15px; line-height: 1.55; margin: 0 0 16px; }
+  .plan { margin: 0 0 6px; padding: 0; list-style: none; counter-reset: s; }
+  .plan li {
+    counter-increment: s;
+    display: flex; gap: 10px;
+    font-size: 14px; line-height: 1.5;
+    padding: 7px 0;
+    border-top: 1px solid rgba(246,242,237,.07);
+    color: rgba(246,242,237,.86);
+  }
+  .plan li::before {
+    content: counter(s);
+    flex: none;
+    width: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #C4894F;
+    padding-top: 2px;
+  }
+  .tag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(246,242,237,.1);
+  }
+  .tag-label {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(246,242,237,.45);
+    margin: 0 0 3px;
+  }
+  .tag-value { font-size: 13px; margin: 0; }
+
+  .actions {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 10px;
+    background: linear-gradient(to top, rgba(11,18,14,.98) 70%, transparent);
+  }
+  .actions[hidden] { display: none; }
+  button { font-family: inherit; cursor: pointer; }
+  button:focus-visible { outline: 2px solid #C4894F; outline-offset: 2px; }
+  .btn-reject {
+    padding: 16px 0; border-radius: 12px;
+    border: 1px solid #8C4A3F; background: transparent;
+    color: #D9A79C; font-size: 15px; font-weight: 600;
+  }
+  .btn-approve {
+    padding: 16px 0; border-radius: 12px;
+    border: none; background: #3B5840;
+    color: #F6F2ED; font-size: 16px; font-weight: 700;
+  }
+  .undo {
+    position: fixed;
+    left: 50%; transform: translateX(-50%);
+    bottom: calc(86px + env(safe-area-inset-bottom));
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(246,242,237,.18);
+    background: #1B231D;
+    color: #F6F2ED;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .undo.show { opacity: 1; pointer-events: auto; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="wordmark">Hooks</span>
+    <span class="count" id="count">—</span>
+  </header>
+
+  <p class="muted" id="loading">Loading ideas…</p>
+
+  <div class="empty" id="empty" hidden>
+    <p class="empty-title">All caught up.</p>
+    <p class="muted">Nothing waiting on you. New hooks show up here each week, shaped by what actually performed.</p>
+  </div>
+
+  <article class="card" id="card" hidden></article>
+
+  <div class="actions" id="actions" hidden>
+    <button class="btn-reject" id="btn-reject">Skip</button>
+    <button class="btn-approve" id="btn-approve">Approve</button>
+  </div>
+  <button class="undo" id="undo">Undo</button>
+</main>
+
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+  // Anon key + URL are meant to be public (RLS gates access); this page has
+  // no build step, so there is no env injection — same values as queue.html.
+  const SUPABASE_URL = "https://uyojsutabhachdvdlbpy.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5b2pzdXRhYmhhY2hkdmRsYnB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NDEzNjcsImV4cCI6MjA5ODQxNzM2N30.7MiWH55CFSheVU8IQjnG29GnNjYZrwikB8nNT8ANjck";
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const els = {
+    count: document.getElementById("count"),
+    loading: document.getElementById("loading"),
+    empty: document.getElementById("empty"),
+    card: document.getElementById("card"),
+    actions: document.getElementById("actions"),
+    btnReject: document.getElementById("btn-reject"),
+    btnApprove: document.getElementById("btn-approve"),
+    undo: document.getElementById("undo"),
+  };
+
+  let ideas = [];
+  let leaving = false;
+  let lastDecision = null;   // { idea, index } — one step of undo
+  let undoTimer = null;
+
+  const esc = (s) =>
+    String(s ?? "").replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  function fmtWhen(iso) {
+    return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
+  function tagRow(label, value) {
+    if (!value) return "";
+    return `<div><p class="tag-label">${esc(label)}</p><p class="tag-value">${esc(value)}</p></div>`;
+  }
+
+  function render() {
+    const current = ideas[0];
+    els.loading.hidden = true;
+    els.count.textContent = ideas.length === 0 ? "clear" : `${ideas.length} waiting`;
+
+    if (!current) {
+      els.empty.hidden = false;
+      els.card.hidden = true;
+      els.actions.hidden = true;
+      return;
+    }
+
+    els.empty.hidden = true;
+    els.card.hidden = false;
+    els.actions.hidden = false;
+    els.card.className = "card";
+
+    const plan = (current.slide_plan || []);
+    const count = current.slide_count ?? (plan.length || null);
+
+    els.card.innerHTML = `
+      <div class="cover">
+        ${count ? `<span class="slide-chip">${count} slides</span>` : ""}
+        <div class="cover-main">${esc(current.main_text)}</div>
+        ${current.subtitle ? `<div class="cover-sub">${esc(current.subtitle)}</div>` : ""}
+      </div>
+      <div class="body">
+        <div class="meta-row">
+          <span class="account">${esc(current.social_accounts?.display_name ?? current.account_key)}</span>
+          <span class="time">${fmtWhen(current.created_at)}</span>
+        </div>
+        ${current.concept ? `<p class="concept">${esc(current.concept)}</p>` : ""}
+        ${plan.length ? `<ul class="plan">${plan.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>` : ""}
+        <dl class="tag-grid">
+          ${tagRow("Theme", current.theme)}
+          ${tagRow("Hook", current.hook_type)}
+          ${tagRow("Format", current.format)}
+          ${tagRow("Sound", current.sound_type)}
+        </dl>
+      </div>
+    `;
+  }
+
+  async function load() {
+    const { data, error } = await supabase
+      .from("idea_queue")
+      .select("*, social_accounts(display_name, platform)")
+      .eq("status", "pending")
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error(error);
+      els.loading.textContent = "Couldn't load ideas — check the console.";
+      return;
+    }
+    ideas = data ?? [];
+    render();
+  }
+
+  function showUndo() {
+    els.undo.classList.add("show");
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(() => {
+      els.undo.classList.remove("show");
+      lastDecision = null;
+    }, 6000);
+  }
+
+  async function decide(status) {
+    const current = ideas[0];
+    if (!current || leaving) return;
+    leaving = true;
+
+    els.card.classList.add(status === "approved" ? "leaving-approve" : "leaving-reject");
+    const { error } = await supabase.from("idea_queue").update({ status }).eq("id", current.id);
+
+    if (error) {
+      console.error(error);
+      els.card.className = "card";
+      leaving = false;
+      return;
+    }
+
+    lastDecision = current;
+    setTimeout(() => {
+      ideas = ideas.slice(1);
+      leaving = false;
+      render();
+      showUndo();
+    }, 260);
+  }
+
+  // Tapping fast on a phone means the occasional wrong call. One step back is
+  // enough to fix it without turning this into a whole edit screen.
+  async function undo() {
+    if (!lastDecision) return;
+    const idea = lastDecision;
+    lastDecision = null;
+    els.undo.classList.remove("show");
+    clearTimeout(undoTimer);
+
+    const { error } = await supabase
+      .from("idea_queue")
+      .update({ status: "pending" })
+      .eq("id", idea.id);
+
+    if (error) { console.error(error); return; }
+    ideas = [idea, ...ideas];
+    render();
+  }
+
+  els.btnReject.addEventListener("click", () => decide("rejected"));
+  els.btnApprove.addEventListener("click", () => decide("approved"));
+  els.undo.addEventListener("click", undo);
+
+  load();
+</script>
+</body>
+</html>
