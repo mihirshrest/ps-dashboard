@@ -1,6 +1,0 @@
-# Local-only files. These hold secrets and must never reach the public repo.
-upload.local.html
-.gh-token.local
-
-node_modules/
-.claude/

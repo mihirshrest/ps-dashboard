@@ -54,10 +54,13 @@
     transition: transform .26s cubic-bezier(.4,0,.2,1), opacity .26s ease;
   }
   .card.leaving-approve { transform: translateX(28%) rotate(3deg); opacity: 0; }
-  .card.leaving-reject { transform: translateX(-28%) rotate(-3deg); opacity: 0; }
+  .card.leaving-reject  { transform: translateX(-28%) rotate(-3deg); opacity: 0; }
+  .card.leaving-revise  { transform: translateY(-14%); opacity: 0; }
   @media (prefers-reduced-motion: reduce) {
     .card { transition: opacity .15s ease; }
-    .card.leaving-approve, .card.leaving-reject { transform: none; opacity: 0; }
+    .card.leaving-approve, .card.leaving-reject, .card.leaving-revise {
+      transform: none; opacity: 0;
+    }
   }
 
   /* Mock cover. Not the real slide — just close enough that judging the hook
@@ -75,44 +78,33 @@
     background:
       radial-gradient(120% 90% at 50% 0%, #3a332b 0%, #241f1a 55%, #191512 100%);
   }
-  .cover::after {
-    content: "";
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,.25);
-  }
+  .cover::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.25); }
   .cover-main, .cover-sub { position: relative; z-index: 1; }
   .cover-main {
     font-family: Poppins, system-ui, sans-serif;
-    font-style: italic;
-    font-weight: 700;
+    font-style: italic; font-weight: 700;
     font-size: clamp(26px, 7.6vw, 38px);
-    line-height: 1.12;
-    letter-spacing: -0.01em;
+    line-height: 1.12; letter-spacing: -0.01em;
     text-shadow:
       2px 2px 0 rgba(0,0,0,.55), -2px 2px 0 rgba(0,0,0,.55),
       2px -2px 0 rgba(0,0,0,.55), -2px -2px 0 rgba(0,0,0,.55);
   }
   .cover-sub {
     font-family: Poppins, system-ui, sans-serif;
-    font-style: italic;
-    font-weight: 700;
+    font-style: italic; font-weight: 700;
     font-size: clamp(13px, 3.6vw, 16px);
     line-height: 1.35;
     color: rgba(246,242,237,.92);
     text-shadow: 1px 1px 0 rgba(0,0,0,.5);
   }
-  .slide-chip {
-    position: absolute;
-    top: 12px; right: 12px;
-    z-index: 1;
-    padding: 6px 11px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .03em;
-    background: rgba(11,18,14,.72);
-    color: #F6F2ED;
+  .chip-tr, .chip-tl {
+    position: absolute; top: 12px; z-index: 1;
+    padding: 6px 11px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: .03em;
+    background: rgba(11,18,14,.72); color: #F6F2ED;
   }
+  .chip-tr { right: 12px; }
+  .chip-tl { left: 12px; background: #C4894F; }
 
   .body { padding: 18px 18px 22px; }
   .meta-row {
@@ -133,39 +125,25 @@
   }
   .plan li::before {
     content: counter(s);
-    flex: none;
-    width: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    color: #C4894F;
-    padding-top: 2px;
+    flex: none; width: 20px;
+    font-size: 11px; font-weight: 700; color: #C4894F; padding-top: 2px;
   }
   .tag-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 16px;
-    margin: 0;
-    padding-top: 16px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px 16px; margin: 0; padding-top: 16px;
     border-top: 1px solid rgba(246,242,237,.1);
   }
   .tag-label {
-    font-size: 10px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: rgba(246,242,237,.45);
-    margin: 0 0 3px;
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(246,242,237,.45); margin: 0 0 3px;
   }
   .tag-value { font-size: 13px; margin: 0; }
 
   .actions {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    max-width: 520px;
-    margin: 0 auto;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    max-width: 520px; margin: 0 auto;
     padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 10px;
+    display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 10px;
     background: linear-gradient(to top, rgba(11,18,14,.98) 70%, transparent);
   }
   .actions[hidden] { display: none; }
@@ -176,26 +154,79 @@
     border: 1px solid #8C4A3F; background: transparent;
     color: #D9A79C; font-size: 15px; font-weight: 600;
   }
+  .btn-revise {
+    padding: 16px 0; border-radius: 12px;
+    border: 1px solid #C4894F; background: transparent;
+    color: #E0B078; font-size: 15px; font-weight: 600;
+  }
   .btn-approve {
     padding: 16px 0; border-radius: 12px;
     border: none; background: #3B5840;
     color: #F6F2ED; font-size: 16px; font-weight: 700;
   }
   .undo {
-    position: fixed;
-    left: 50%; transform: translateX(-50%);
+    position: fixed; left: 50%; transform: translateX(-50%);
     bottom: calc(86px + env(safe-area-inset-bottom));
-    padding: 9px 16px;
-    border-radius: 999px;
+    padding: 9px 16px; border-radius: 999px;
     border: 1px solid rgba(246,242,237,.18);
-    background: #1B231D;
-    color: #F6F2ED;
-    font-size: 13px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s ease;
+    background: #1B231D; color: #F6F2ED; font-size: 13px;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
   }
   .undo.show { opacity: 1; pointer-events: auto; }
+
+  /* Fix sheet — pick the one thing that's wrong instead of binning the idea. */
+  .scrim {
+    position: fixed; inset: 0; background: rgba(6,10,8,.7);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+    z-index: 10;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    max-width: 520px; margin: 0 auto;
+    background: #141B16;
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid rgba(246,242,237,.12);
+    padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+    transform: translateY(102%);
+    transition: transform .26s cubic-bezier(.4,0,.2,1);
+    z-index: 11;
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet h2 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 21px; font-weight: 400; margin: 0 0 4px;
+  }
+  .sheet .muted { margin: 0 0 16px; }
+  .picks { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .pick {
+    padding: 10px 14px; border-radius: 999px;
+    border: 1px solid rgba(246,242,237,.2);
+    background: transparent; color: #F6F2ED; font-size: 14px;
+  }
+  .pick[aria-pressed="true"] {
+    background: #C4894F; border-color: #C4894F; color: #1A1208; font-weight: 600;
+  }
+  textarea {
+    width: 100%; min-height: 74px; resize: vertical;
+    padding: 12px 13px; border-radius: 12px;
+    border: 1px solid rgba(246,242,237,.16);
+    background: #0F1511; color: #F6F2ED;
+    font-family: inherit; font-size: 14.5px; line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  textarea::placeholder { color: rgba(246,242,237,.35); }
+  .sheet-actions { display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px; }
+  .btn-cancel {
+    padding: 15px 0; border-radius: 12px;
+    border: 1px solid rgba(246,242,237,.2); background: transparent;
+    color: #F6F2ED; font-size: 15px;
+  }
+  .btn-send {
+    padding: 15px 0; border-radius: 12px; border: none;
+    background: #C4894F; color: #1A1208; font-size: 15px; font-weight: 700;
+  }
+  .btn-send:disabled { opacity: .4; cursor: default; }
 </style>
 </head>
 <body>
@@ -215,11 +246,24 @@
   <article class="card" id="card" hidden></article>
 
   <div class="actions" id="actions" hidden>
-    <button class="btn-reject" id="btn-reject">Skip</button>
+    <button class="btn-reject"  id="btn-reject">Skip</button>
+    <button class="btn-revise"  id="btn-revise">Fix</button>
     <button class="btn-approve" id="btn-approve">Approve</button>
   </div>
   <button class="undo" id="undo">Undo</button>
 </main>
+
+<div class="scrim" id="scrim"></div>
+<section class="sheet" id="sheet" aria-hidden="true">
+  <h2>What needs changing?</h2>
+  <p class="muted">Tap what's off. Everything else stays as is — I rewrite only what you pick and send it back.</p>
+  <div class="picks" id="picks"></div>
+  <textarea id="note" placeholder="Optional — what's wrong with it, in your words"></textarea>
+  <div class="sheet-actions">
+    <button class="btn-cancel" id="btn-cancel">Cancel</button>
+    <button class="btn-send" id="btn-send" disabled>Send back</button>
+  </div>
+</section>
 
 <script type="module">
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -231,6 +275,14 @@
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  const FIXABLE = [
+    { key: "main_text",  label: "Title" },
+    { key: "subtitle",   label: "Subtitle" },
+    { key: "concept",    label: "The angle" },
+    { key: "slide_plan", label: "The slides" },
+    { key: "tags",       label: "Format / sound" },
+  ];
+
   const els = {
     count: document.getElementById("count"),
     loading: document.getElementById("loading"),
@@ -238,22 +290,29 @@
     card: document.getElementById("card"),
     actions: document.getElementById("actions"),
     btnReject: document.getElementById("btn-reject"),
+    btnRevise: document.getElementById("btn-revise"),
     btnApprove: document.getElementById("btn-approve"),
     undo: document.getElementById("undo"),
+    scrim: document.getElementById("scrim"),
+    sheet: document.getElementById("sheet"),
+    picks: document.getElementById("picks"),
+    note: document.getElementById("note"),
+    btnCancel: document.getElementById("btn-cancel"),
+    btnSend: document.getElementById("btn-send"),
   };
 
   let ideas = [];
   let leaving = false;
-  let lastDecision = null;   // { idea, index } — one step of undo
+  let lastDecision = null;   // one step of undo
   let undoTimer = null;
+  let picked = new Set();
 
   const esc = (s) =>
     String(s ?? "").replace(/[&<>"']/g, (c) =>
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  function fmtWhen(iso) {
-    return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-  }
+  const fmtWhen = (iso) =>
+    new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 
   function tagRow(label, value) {
     if (!value) return "";
@@ -277,12 +336,13 @@
     els.actions.hidden = false;
     els.card.className = "card";
 
-    const plan = (current.slide_plan || []);
+    const plan = current.slide_plan || [];
     const count = current.slide_count ?? (plan.length || null);
 
     els.card.innerHTML = `
       <div class="cover">
-        ${count ? `<span class="slide-chip">${count} slides</span>` : ""}
+        ${current.revision > 0 ? `<span class="chip-tl">rewrite ${current.revision}</span>` : ""}
+        ${count ? `<span class="chip-tr">${count} slides</span>` : ""}
         <div class="cover-main">${esc(current.main_text)}</div>
         ${current.subtitle ? `<div class="cover-sub">${esc(current.subtitle)}</div>` : ""}
       </div>
@@ -328,28 +388,41 @@
     }, 6000);
   }
 
-  async function decide(status) {
+  function advance(anim) {
+    return new Promise((resolve) => {
+      els.card.classList.add(anim);
+      setTimeout(() => {
+        ideas = ideas.slice(1);
+        leaving = false;
+        render();
+        showUndo();
+        resolve();
+      }, 260);
+    });
+  }
+
+  async function decide(status, extra = {}) {
     const current = ideas[0];
     if (!current || leaving) return;
     leaving = true;
 
-    els.card.classList.add(status === "approved" ? "leaving-approve" : "leaving-reject");
-    const { error } = await supabase.from("idea_queue").update({ status }).eq("id", current.id);
+    const { error } = await supabase
+      .from("idea_queue")
+      .update({ status, ...extra })
+      .eq("id", current.id);
 
     if (error) {
       console.error(error);
-      els.card.className = "card";
       leaving = false;
       return;
     }
 
     lastDecision = current;
-    setTimeout(() => {
-      ideas = ideas.slice(1);
-      leaving = false;
-      render();
-      showUndo();
-    }, 260);
+    await advance(
+      status === "approved" ? "leaving-approve"
+      : status === "revise" ? "leaving-revise"
+      : "leaving-reject",
+    );
   }
 
   // Tapping fast on a phone means the occasional wrong call. One step back is
@@ -363,7 +436,7 @@
 
     const { error } = await supabase
       .from("idea_queue")
-      .update({ status: "pending" })
+      .update({ status: "pending", revise_fields: [], revise_note: null })
       .eq("id", idea.id);
 
     if (error) { console.error(error); return; }
@@ -371,8 +444,57 @@
     render();
   }
 
+  // --- Fix sheet ---------------------------------------------------------
+
+  function buildPicks() {
+    els.picks.innerHTML = FIXABLE
+      .map((f) => `<button class="pick" data-key="${f.key}" aria-pressed="false">${f.label}</button>`)
+      .join("");
+    els.picks.querySelectorAll(".pick").forEach((b) => {
+      b.addEventListener("click", () => {
+        const key = b.dataset.key;
+        const on = b.getAttribute("aria-pressed") === "true";
+        b.setAttribute("aria-pressed", String(!on));
+        on ? picked.delete(key) : picked.add(key);
+        els.btnSend.disabled = picked.size === 0;
+      });
+    });
+  }
+
+  function openSheet() {
+    if (!ideas[0]) return;
+    picked = new Set();
+    els.note.value = "";
+    els.btnSend.disabled = true;
+    buildPicks();
+    els.scrim.classList.add("open");
+    els.sheet.classList.add("open");
+    els.sheet.setAttribute("aria-hidden", "false");
+  }
+
+  function closeSheet() {
+    els.scrim.classList.remove("open");
+    els.sheet.classList.remove("open");
+    els.sheet.setAttribute("aria-hidden", "true");
+  }
+
+  async function sendBack() {
+    if (!picked.size) return;
+    const fields = [...picked];
+    const note = els.note.value.trim();
+    closeSheet();
+    await decide("revise", {
+      revise_fields: fields,
+      revise_note: note || null,
+    });
+  }
+
   els.btnReject.addEventListener("click", () => decide("rejected"));
   els.btnApprove.addEventListener("click", () => decide("approved"));
+  els.btnRevise.addEventListener("click", openSheet);
+  els.btnCancel.addEventListener("click", closeSheet);
+  els.scrim.addEventListener("click", closeSheet);
+  els.btnSend.addEventListener("click", sendBack);
   els.undo.addEventListener("click", undo);
 
   load();
