@@ -15,41 +15,43 @@
     min-height: 100dvh;
     font-family: Inter, system-ui, sans-serif;
     color: #F6F2ED;
+    -webkit-tap-highlight-color: transparent;
   }
-  main {
-    max-width: 520px;
-    margin: 0 auto;
-    padding: 0 16px 120px;
-    min-height: 100dvh;
-  }
+  main { max-width: 520px; margin: 0 auto; padding: 0 16px 130px; min-height: 100dvh; }
+
   header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    padding: 22px 2px 16px;
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 22px 2px 14px;
   }
-  .wordmark {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-size: 30px;
-    letter-spacing: -0.01em;
+  .wordmark { font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; letter-spacing: -0.01em; }
+  .count { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #C4894F; }
+
+  .tabs {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 4px; padding: 4px; margin-bottom: 18px;
+    background: #141B16; border-radius: 12px;
+    border: 1px solid rgba(246,242,237,.08);
   }
-  .count {
-    font-size: 12px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: #C4894F;
+  .tab {
+    padding: 10px 0; border: none; border-radius: 9px;
+    background: transparent; color: rgba(246,242,237,.6);
+    font-family: inherit; font-size: 14px; font-weight: 600;
   }
+  .tab[aria-selected="true"] { background: #222C25; color: #F6F2ED; }
+  .tab .badge {
+    display: inline-block; min-width: 18px; margin-left: 5px;
+    padding: 1px 5px; border-radius: 999px;
+    background: #C4894F; color: #1A1208; font-size: 11px; font-weight: 700;
+  }
+  .tab[aria-selected="false"] .badge { background: rgba(246,242,237,.18); color: rgba(246,242,237,.75); }
+
   .muted { font-size: 14px; color: rgba(246,242,237,.55); line-height: 1.6; }
-  .empty { padding: 80px 8px; text-align: center; }
-  .empty-title {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-size: 24px;
-    margin: 0 0 8px;
-  }
+  .empty { padding: 64px 8px; text-align: center; }
+  .empty-title { font-family: 'Instrument Serif', Georgia, serif; font-size: 24px; margin: 0 0 8px; }
+  .empty .btn-ask { margin-top: 22px; }
+
   .card {
-    background: #141B16;
-    border-radius: 18px;
-    overflow: hidden;
+    background: #141B16; border-radius: 18px; overflow: hidden;
     border: 1px solid rgba(246,242,237,.09);
     transition: transform .26s cubic-bezier(.4,0,.2,1), opacity .26s ease;
   }
@@ -58,44 +60,27 @@
   .card.leaving-revise  { transform: translateY(-14%); opacity: 0; }
   @media (prefers-reduced-motion: reduce) {
     .card { transition: opacity .15s ease; }
-    .card.leaving-approve, .card.leaving-reject, .card.leaving-revise {
-      transform: none; opacity: 0;
-    }
+    .card.leaving-approve, .card.leaving-reject, .card.leaving-revise { transform: none; opacity: 0; }
   }
 
-  /* Mock cover. Not the real slide — just close enough that judging the hook
-     here feels like judging it on the feed. */
   .cover {
-    position: relative;
-    aspect-ratio: 4 / 5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 28px 22px;
-    text-align: center;
-    background:
-      radial-gradient(120% 90% at 50% 0%, #3a332b 0%, #241f1a 55%, #191512 100%);
+    position: relative; aspect-ratio: 4 / 5;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; padding: 28px 22px; text-align: center;
+    background: radial-gradient(120% 90% at 50% 0%, #3a332b 0%, #241f1a 55%, #191512 100%);
   }
   .cover::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.25); }
   .cover-main, .cover-sub { position: relative; z-index: 1; }
   .cover-main {
-    font-family: Poppins, system-ui, sans-serif;
-    font-style: italic; font-weight: 700;
-    font-size: clamp(26px, 7.6vw, 38px);
-    line-height: 1.12; letter-spacing: -0.01em;
-    text-shadow:
-      2px 2px 0 rgba(0,0,0,.55), -2px 2px 0 rgba(0,0,0,.55),
-      2px -2px 0 rgba(0,0,0,.55), -2px -2px 0 rgba(0,0,0,.55);
+    font-family: Poppins, system-ui, sans-serif; font-style: italic; font-weight: 700;
+    font-size: clamp(26px, 7.6vw, 38px); line-height: 1.12; letter-spacing: -0.01em;
+    text-shadow: 2px 2px 0 rgba(0,0,0,.55), -2px 2px 0 rgba(0,0,0,.55),
+                 2px -2px 0 rgba(0,0,0,.55), -2px -2px 0 rgba(0,0,0,.55);
   }
   .cover-sub {
-    font-family: Poppins, system-ui, sans-serif;
-    font-style: italic; font-weight: 700;
-    font-size: clamp(13px, 3.6vw, 16px);
-    line-height: 1.35;
-    color: rgba(246,242,237,.92);
-    text-shadow: 1px 1px 0 rgba(0,0,0,.5);
+    font-family: Poppins, system-ui, sans-serif; font-style: italic; font-weight: 700;
+    font-size: clamp(13px, 3.6vw, 16px); line-height: 1.35;
+    color: rgba(246,242,237,.92); text-shadow: 1px 1px 0 rgba(0,0,0,.5);
   }
   .chip-tr, .chip-tl {
     position: absolute; top: 12px; z-index: 1;
@@ -104,34 +89,26 @@
     background: rgba(11,18,14,.72); color: #F6F2ED;
   }
   .chip-tr { right: 12px; }
-  .chip-tl { left: 12px; background: #C4894F; }
+  .chip-tl { left: 12px; background: #C4894F; color: #1A1208; }
 
   .body { padding: 18px 18px 22px; }
-  .meta-row {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 12px;
-  }
+  .meta-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
   .account { font-size: 13px; font-weight: 600; }
   .time { font-size: 12px; color: rgba(246,242,237,.5); }
   .concept { font-size: 15px; line-height: 1.55; margin: 0 0 16px; }
   .plan { margin: 0 0 6px; padding: 0; list-style: none; counter-reset: s; }
   .plan li {
-    counter-increment: s;
-    display: flex; gap: 10px;
-    font-size: 14px; line-height: 1.5;
-    padding: 7px 0;
-    border-top: 1px solid rgba(246,242,237,.07);
-    color: rgba(246,242,237,.86);
+    counter-increment: s; display: flex; gap: 10px;
+    font-size: 14px; line-height: 1.5; padding: 7px 0;
+    border-top: 1px solid rgba(246,242,237,.07); color: rgba(246,242,237,.86);
   }
   .plan li::before {
-    content: counter(s);
-    flex: none; width: 20px;
+    content: counter(s); flex: none; width: 20px;
     font-size: 11px; font-weight: 700; color: #C4894F; padding-top: 2px;
   }
   .tag-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 12px 16px; margin: 0; padding-top: 16px;
-    border-top: 1px solid rgba(246,242,237,.1);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px;
+    margin: 0; padding-top: 16px; border-top: 1px solid rgba(246,242,237,.1);
   }
   .tag-label {
     font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
@@ -139,30 +116,77 @@
   }
   .tag-value { font-size: 13px; margin: 0; }
 
-  .actions {
+  .filters { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 14px; margin: -2px 0 4px; }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter {
+    flex: none; padding: 8px 13px; border-radius: 999px;
+    border: 1px solid rgba(246,242,237,.16); background: transparent;
+    color: rgba(246,242,237,.7); font-family: inherit; font-size: 13px; white-space: nowrap;
+  }
+  .filter[aria-pressed="true"] { background: #222C25; border-color: #3B5840; color: #F6F2ED; font-weight: 600; }
+
+  .row {
+    display: flex; gap: 12px; align-items: center; width: 100%; text-align: left;
+    padding: 12px 14px; margin-bottom: 9px;
+    background: #141B16; border: 1px solid rgba(246,242,237,.08); border-radius: 13px;
+    font-family: inherit; color: inherit;
+  }
+  button.row:active { background: #1B231D; }
+  .thumb { flex: none; width: 46px; height: 58px; border-radius: 8px; object-fit: cover; background: #0F1511; }
+  .row .col { flex: 1; min-width: 0; }
+  .row-title { font-size: 15px; font-weight: 600; margin: 0 0 3px; line-height: 1.35; }
+  .row-sub { font-size: 13px; color: rgba(246,242,237,.55); margin: 0; line-height: 1.45; }
+  .row-meta { font-size: 11.5px; color: rgba(246,242,237,.4); margin: 6px 0 0; }
+  .pill {
+    flex: none; padding: 5px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: .02em; white-space: nowrap;
+  }
+  .p-pending  { background: rgba(246,242,237,.12); color: #F6F2ED; }
+  .p-approved { background: #3B5840; color: #F6F2ED; }
+  .p-revise   { background: #C4894F; color: #1A1208; }
+  .p-rejected { background: rgba(140,74,63,.35); color: #D9A79C; }
+  .p-built    { background: #2C3E4E; color: #CFE2F0; }
+  .p-live     { background: #3B5840; color: #F6F2ED; }
+  .p-failed   { background: #8C4A3F; color: #F6F2ED; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-bottom: 18px; }
+  .stat {
+    background: #141B16; border: 1px solid rgba(246,242,237,.08);
+    border-radius: 13px; padding: 14px 12px; text-align: center;
+  }
+  .stat b { display: block; font-size: 24px; font-weight: 700; line-height: 1.1; }
+  .stat span {
+    font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+    color: rgba(246,242,237,.45);
+  }
+  .hint { font-size: 12.5px; color: rgba(246,242,237,.4); margin: 0 2px 14px; }
+
+  .actions, .bottom {
     position: fixed; bottom: 0; left: 0; right: 0;
     max-width: 520px; margin: 0 auto;
     padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
-    display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 10px;
     background: linear-gradient(to top, rgba(11,18,14,.98) 70%, transparent);
   }
-  .actions[hidden] { display: none; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 10px; }
+  .actions[hidden], .bottom[hidden] { display: none; }
   button { font-family: inherit; cursor: pointer; }
   button:focus-visible { outline: 2px solid #C4894F; outline-offset: 2px; }
   .btn-reject {
-    padding: 16px 0; border-radius: 12px;
-    border: 1px solid #8C4A3F; background: transparent;
-    color: #D9A79C; font-size: 15px; font-weight: 600;
+    padding: 16px 0; border-radius: 12px; border: 1px solid #8C4A3F;
+    background: transparent; color: #D9A79C; font-size: 15px; font-weight: 600;
   }
   .btn-revise {
-    padding: 16px 0; border-radius: 12px;
-    border: 1px solid #C4894F; background: transparent;
-    color: #E0B078; font-size: 15px; font-weight: 600;
+    padding: 16px 0; border-radius: 12px; border: 1px solid #C4894F;
+    background: transparent; color: #E0B078; font-size: 15px; font-weight: 600;
   }
   .btn-approve {
-    padding: 16px 0; border-radius: 12px;
-    border: none; background: #3B5840;
-    color: #F6F2ED; font-size: 16px; font-weight: 700;
+    padding: 16px 0; border-radius: 12px; border: none;
+    background: #3B5840; color: #F6F2ED; font-size: 16px; font-weight: 700;
+  }
+  .btn-ask {
+    width: 100%; padding: 16px 0; border-radius: 12px;
+    border: 1px solid rgba(246,242,237,.22); background: #141B16;
+    color: #F6F2ED; font-size: 15px; font-weight: 600;
   }
   .undo {
     position: fixed; left: 50%; transform: translateX(-50%);
@@ -170,26 +194,23 @@
     padding: 9px 16px; border-radius: 999px;
     border: 1px solid rgba(246,242,237,.18);
     background: #1B231D; color: #F6F2ED; font-size: 13px;
-    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 5;
   }
   .undo.show { opacity: 1; pointer-events: auto; }
 
-  /* Fix sheet — pick the one thing that's wrong instead of binning the idea. */
   .scrim {
     position: fixed; inset: 0; background: rgba(6,10,8,.7);
-    opacity: 0; pointer-events: none; transition: opacity .2s ease;
-    z-index: 10;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 10;
   }
   .scrim.open { opacity: 1; pointer-events: auto; }
   .sheet {
     position: fixed; left: 0; right: 0; bottom: 0;
     max-width: 520px; margin: 0 auto;
-    background: #141B16;
-    border-radius: 20px 20px 0 0;
+    background: #141B16; border-radius: 20px 20px 0 0;
     border-top: 1px solid rgba(246,242,237,.12);
     padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
-    transform: translateY(102%);
-    transition: transform .26s cubic-bezier(.4,0,.2,1);
+    max-height: 86dvh; overflow-y: auto;
+    transform: translateY(102%); transition: transform .26s cubic-bezier(.4,0,.2,1);
     z-index: 11;
   }
   .sheet.open { transform: translateY(0); }
@@ -204,16 +225,13 @@
     border: 1px solid rgba(246,242,237,.2);
     background: transparent; color: #F6F2ED; font-size: 14px;
   }
-  .pick[aria-pressed="true"] {
-    background: #C4894F; border-color: #C4894F; color: #1A1208; font-weight: 600;
-  }
+  .pick[aria-pressed="true"] { background: #C4894F; border-color: #C4894F; color: #1A1208; font-weight: 600; }
   textarea {
     width: 100%; min-height: 74px; resize: vertical;
     padding: 12px 13px; border-radius: 12px;
     border: 1px solid rgba(246,242,237,.16);
     background: #0F1511; color: #F6F2ED;
-    font-family: inherit; font-size: 14.5px; line-height: 1.5;
-    margin-bottom: 14px;
+    font-family: inherit; font-size: 14.5px; line-height: 1.5; margin-bottom: 14px;
   }
   textarea::placeholder { color: rgba(246,242,237,.35); }
   .sheet-actions { display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px; }
@@ -227,6 +245,25 @@
     background: #C4894F; color: #1A1208; font-size: 15px; font-weight: 700;
   }
   .btn-send:disabled { opacity: .4; cursor: default; }
+  .btn-copy {
+    width: 100%; padding: 13px 0; border-radius: 12px; margin-bottom: 14px;
+    border: 1px solid rgba(246,242,237,.2); background: transparent;
+    color: #F6F2ED; font-size: 14.5px; font-weight: 600;
+  }
+  .strip { display: flex; gap: 7px; overflow-x: auto; margin: 0 0 16px; padding-bottom: 4px; }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip img {
+    flex: none; width: 62px; height: 78px; border-radius: 8px;
+    object-fit: cover; background: #0F1511;
+  }
+  .toast {
+    position: fixed; left: 50%; transform: translateX(-50%) translateY(10px);
+    bottom: calc(96px + env(safe-area-inset-bottom));
+    padding: 11px 18px; border-radius: 999px;
+    background: #3B5840; color: #F6F2ED; font-size: 14px; font-weight: 600;
+    opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 20;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -236,25 +273,49 @@
     <span class="count" id="count">—</span>
   </header>
 
-  <p class="muted" id="loading">Loading ideas…</p>
-
-  <div class="empty" id="empty" hidden>
-    <p class="empty-title">All caught up.</p>
-    <p class="muted">Nothing waiting on you. New hooks show up here each week, shaped by what actually performed.</p>
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tab-review" role="tab" aria-selected="true">Review<span class="badge" id="b-review">0</span></button>
+    <button class="tab" id="tab-bank"   role="tab" aria-selected="false">Bank</button>
+    <button class="tab" id="tab-queue"  role="tab" aria-selected="false">Posts<span class="badge" id="b-queue">0</span></button>
   </div>
 
-  <article class="card" id="card" hidden></article>
+  <p class="muted" id="loading">Loading…</p>
 
-  <div class="actions" id="actions" hidden>
-    <button class="btn-reject"  id="btn-reject">Skip</button>
-    <button class="btn-revise"  id="btn-revise">Fix</button>
-    <button class="btn-approve" id="btn-approve">Approve</button>
-  </div>
-  <button class="undo" id="undo">Undo</button>
+  <section id="view-review" hidden>
+    <div class="empty" id="empty" hidden>
+      <p class="empty-title">All caught up.</p>
+      <p class="muted">Nothing waiting on you. Want a fresh batch of ideas?</p>
+      <button class="btn-ask" id="btn-ask-empty">Ask for more hooks</button>
+    </div>
+    <article class="card" id="card" hidden></article>
+  </section>
+
+  <section id="view-bank" hidden>
+    <div class="filters" id="filters"></div>
+    <div id="bank-list"></div>
+  </section>
+
+  <section id="view-queue" hidden>
+    <div class="stat-row" id="queue-stats"></div>
+    <p class="hint">Tap any post to copy its caption or flag what needs fixing.</p>
+    <div id="queue-list"></div>
+  </section>
 </main>
 
+<div class="actions" id="actions" hidden>
+  <button class="btn-reject"  id="btn-reject">Skip</button>
+  <button class="btn-revise"  id="btn-revise">Fix</button>
+  <button class="btn-approve" id="btn-approve">Approve</button>
+</div>
+<div class="bottom" id="bottom-ask" hidden>
+  <button class="btn-ask" id="btn-ask">Ask for more hooks</button>
+</div>
+<button class="undo" id="undo">Undo</button>
+<div class="toast" id="toast"></div>
+
 <div class="scrim" id="scrim"></div>
-<section class="sheet" id="sheet" aria-hidden="true">
+
+<section class="sheet" id="sheet-fix" aria-hidden="true">
   <h2>What needs changing?</h2>
   <p class="muted">Tap what's off. Everything else stays as is — I rewrite only what you pick and send it back.</p>
   <div class="picks" id="picks"></div>
@@ -262,6 +323,31 @@
   <div class="sheet-actions">
     <button class="btn-cancel" id="btn-cancel">Cancel</button>
     <button class="btn-send" id="btn-send" disabled>Send back</button>
+  </div>
+</section>
+
+<section class="sheet" id="sheet-post" aria-hidden="true">
+  <h2 id="post-title">Post</h2>
+  <p class="muted" id="post-sub"></p>
+  <div class="strip" id="post-strip"></div>
+  <button class="btn-copy" id="btn-copy-caption">Copy caption</button>
+  <p class="muted" style="margin-bottom:10px">Something wrong? Tap the parts that need rebuilding.</p>
+  <div class="picks" id="post-picks"></div>
+  <textarea id="post-note" placeholder="Optional — what's wrong with it, in your words"></textarea>
+  <div class="sheet-actions">
+    <button class="btn-cancel" id="btn-post-cancel">Close</button>
+    <button class="btn-send" id="btn-post-send" disabled>Send for rebuild</button>
+  </div>
+</section>
+
+<section class="sheet" id="sheet-ask" aria-hidden="true">
+  <h2>Ask for more hooks</h2>
+  <p class="muted">How many, and anything you want them to lean toward.</p>
+  <div class="picks" id="counts"></div>
+  <textarea id="ask-note" placeholder="Optional — e.g. more skincare, less mindset, something funnier"></textarea>
+  <div class="sheet-actions">
+    <button class="btn-cancel" id="btn-ask-cancel">Cancel</button>
+    <button class="btn-send" id="btn-ask-send">Send request</button>
   </div>
 </section>
 
@@ -275,7 +361,7 @@
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const FIXABLE = [
+  const IDEA_FIXABLE = [
     { key: "main_text",  label: "Title" },
     { key: "subtitle",   label: "Subtitle" },
     { key: "concept",    label: "The angle" },
@@ -283,146 +369,256 @@
     { key: "tags",       label: "Format / sound" },
   ];
 
+  const BANK_FILTERS = [
+    { key: "pending",  label: "Waiting" },
+    { key: "approved", label: "Approved" },
+    { key: "revise",   label: "Being fixed" },
+    { key: "built",    label: "Built" },
+    { key: "rejected", label: "Skipped" },
+  ];
+
+  const $ = (id) => document.getElementById(id);
   const els = {
-    count: document.getElementById("count"),
-    loading: document.getElementById("loading"),
-    empty: document.getElementById("empty"),
-    card: document.getElementById("card"),
-    actions: document.getElementById("actions"),
-    btnReject: document.getElementById("btn-reject"),
-    btnRevise: document.getElementById("btn-revise"),
-    btnApprove: document.getElementById("btn-approve"),
-    undo: document.getElementById("undo"),
-    scrim: document.getElementById("scrim"),
-    sheet: document.getElementById("sheet"),
-    picks: document.getElementById("picks"),
-    note: document.getElementById("note"),
-    btnCancel: document.getElementById("btn-cancel"),
-    btnSend: document.getElementById("btn-send"),
+    count: $("count"), loading: $("loading"),
+    tabReview: $("tab-review"), tabBank: $("tab-bank"), tabQueue: $("tab-queue"),
+    bReview: $("b-review"), bQueue: $("b-queue"),
+    viewReview: $("view-review"), viewBank: $("view-bank"), viewQueue: $("view-queue"),
+    empty: $("empty"), card: $("card"), actions: $("actions"),
+    btnReject: $("btn-reject"), btnRevise: $("btn-revise"), btnApprove: $("btn-approve"),
+    undo: $("undo"), toast: $("toast"),
+    filters: $("filters"), bankList: $("bank-list"),
+    queueStats: $("queue-stats"), queueList: $("queue-list"),
+    bottomAsk: $("bottom-ask"), btnAsk: $("btn-ask"), btnAskEmpty: $("btn-ask-empty"),
+    scrim: $("scrim"),
+    sheetFix: $("sheet-fix"), picks: $("picks"), note: $("note"),
+    btnCancel: $("btn-cancel"), btnSend: $("btn-send"),
+    sheetPost: $("sheet-post"), postTitle: $("post-title"), postSub: $("post-sub"),
+    postStrip: $("post-strip"), postPicks: $("post-picks"), postNote: $("post-note"),
+    btnCopyCaption: $("btn-copy-caption"),
+    btnPostCancel: $("btn-post-cancel"), btnPostSend: $("btn-post-send"),
+    sheetAsk: $("sheet-ask"), counts: $("counts"), askNote: $("ask-note"),
+    btnAskCancel: $("btn-ask-cancel"), btnAskSend: $("btn-ask-send"),
   };
 
-  let ideas = [];
-  let leaving = false;
-  let lastDecision = null;   // one step of undo
-  let undoTimer = null;
-  let picked = new Set();
+  let tab = "review";
+  let ideas = [], bank = [], posts = [];
+  let leaving = false, lastDecision = null, undoTimer = null;
+  let picked = new Set(), postPicked = new Set(), openPost = null;
+  let bankFilter = "pending", askCount = 6;
 
   const esc = (s) =>
     String(s ?? "").replace(/[&<>"']/g, (c) =>
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+  const fmtDay = (iso) =>
+    iso ? new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "";
   const fmtWhen = (iso) =>
-    new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    iso ? new Date(iso).toLocaleString(undefined, { weekday: "short", hour: "numeric", minute: "2-digit" }) : "";
+
+  function toast(msg) {
+    els.toast.textContent = msg;
+    els.toast.classList.add("show");
+    setTimeout(() => els.toast.classList.remove("show"), 2400);
+  }
+
+  // ---------- tabs ----------
+
+  function setTab(next) {
+    tab = next;
+    for (const [name, btn] of [["review", els.tabReview], ["bank", els.tabBank], ["queue", els.tabQueue]]) {
+      btn.setAttribute("aria-selected", String(name === next));
+    }
+    els.viewReview.hidden = next !== "review";
+    els.viewBank.hidden = next !== "bank";
+    els.viewQueue.hidden = next !== "queue";
+    els.actions.hidden = !(next === "review" && ideas.length && !leaving);
+    els.bottomAsk.hidden = next !== "bank";
+    renderCount();
+    if (next === "bank") renderBank();
+    if (next === "queue") renderQueue();
+  }
+
+  function renderCount() {
+    if (tab === "review") els.count.textContent = ideas.length ? `${ideas.length} waiting` : "clear";
+    else if (tab === "bank") els.count.textContent = `${bank.length} total`;
+    else els.count.textContent = posts.length ? `${posts.length} posts` : "empty";
+  }
+
+  // ---------- review ----------
 
   function tagRow(label, value) {
     if (!value) return "";
     return `<div><p class="tag-label">${esc(label)}</p><p class="tag-value">${esc(value)}</p></div>`;
   }
 
-  function render() {
-    const current = ideas[0];
-    els.loading.hidden = true;
-    els.count.textContent = ideas.length === 0 ? "clear" : `${ideas.length} waiting`;
-
-    if (!current) {
-      els.empty.hidden = false;
-      els.card.hidden = true;
-      els.actions.hidden = true;
+  function renderReview() {
+    const cur = ideas[0];
+    els.bReview.textContent = ideas.length;
+    if (!cur) {
+      els.empty.hidden = false; els.card.hidden = true; els.actions.hidden = true;
       return;
     }
-
-    els.empty.hidden = true;
-    els.card.hidden = false;
-    els.actions.hidden = false;
+    els.empty.hidden = true; els.card.hidden = false;
+    if (tab === "review") els.actions.hidden = false;
     els.card.className = "card";
 
-    const plan = current.slide_plan || [];
-    const count = current.slide_count ?? (plan.length || null);
-
+    const plan = cur.slide_plan || [];
+    const count = cur.slide_count ?? (plan.length || null);
     els.card.innerHTML = `
       <div class="cover">
-        ${current.revision > 0 ? `<span class="chip-tl">rewrite ${current.revision}</span>` : ""}
+        ${cur.revision > 0 ? `<span class="chip-tl">rewrite ${cur.revision}</span>` : ""}
         ${count ? `<span class="chip-tr">${count} slides</span>` : ""}
-        <div class="cover-main">${esc(current.main_text)}</div>
-        ${current.subtitle ? `<div class="cover-sub">${esc(current.subtitle)}</div>` : ""}
+        <div class="cover-main">${esc(cur.main_text)}</div>
+        ${cur.subtitle ? `<div class="cover-sub">${esc(cur.subtitle)}</div>` : ""}
       </div>
       <div class="body">
         <div class="meta-row">
-          <span class="account">${esc(current.social_accounts?.display_name ?? current.account_key)}</span>
-          <span class="time">${fmtWhen(current.created_at)}</span>
+          <span class="account">${esc(cur.social_accounts?.display_name ?? cur.account_key)}</span>
+          <span class="time">${fmtDay(cur.created_at)}</span>
         </div>
-        ${current.concept ? `<p class="concept">${esc(current.concept)}</p>` : ""}
+        ${cur.concept ? `<p class="concept">${esc(cur.concept)}</p>` : ""}
         ${plan.length ? `<ul class="plan">${plan.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>` : ""}
         <dl class="tag-grid">
-          ${tagRow("Theme", current.theme)}
-          ${tagRow("Hook", current.hook_type)}
-          ${tagRow("Format", current.format)}
-          ${tagRow("Sound", current.sound_type)}
+          ${tagRow("Theme", cur.theme)}
+          ${tagRow("Hook", cur.hook_type)}
+          ${tagRow("Format", cur.format)}
+          ${tagRow("Sound", cur.sound_type)}
         </dl>
-      </div>
-    `;
+      </div>`;
   }
 
-  async function load() {
-    const { data, error } = await supabase
-      .from("idea_queue")
-      .select("*, social_accounts(display_name, platform)")
-      .eq("status", "pending")
-      .order("created_at", { ascending: true });
+  // ---------- bank ----------
 
-    if (error) {
-      console.error(error);
-      els.loading.textContent = "Couldn't load ideas — check the console.";
+  const IDEA_PILL = {
+    pending: ["p-pending", "waiting"], approved: ["p-approved", "approved"],
+    revise: ["p-revise", "fixing"], built: ["p-built", "built"],
+    rejected: ["p-rejected", "skipped"],
+  };
+
+  function renderBank() {
+    els.filters.innerHTML = BANK_FILTERS.map((f) => {
+      const n = bank.filter((i) => i.status === f.key).length;
+      return `<button class="filter" data-k="${f.key}" aria-pressed="${f.key === bankFilter}">${f.label} ${n}</button>`;
+    }).join("");
+    els.filters.querySelectorAll(".filter").forEach((b) =>
+      b.addEventListener("click", () => { bankFilter = b.dataset.k; renderBank(); }));
+
+    const rows = bank.filter((i) => i.status === bankFilter);
+    if (!rows.length) {
+      els.bankList.innerHTML = `<div class="empty"><p class="muted">Nothing here yet.</p></div>`;
       return;
     }
-    ideas = data ?? [];
-    render();
+    els.bankList.innerHTML = rows.map((i) => {
+      const [cls, label] = IDEA_PILL[i.status] ?? ["p-pending", i.status];
+      const bits = [i.format, i.theme, i.slide_count ? `${i.slide_count} slides` : null].filter(Boolean).join(" · ");
+      const fixing = i.status === "revise" && i.revise_fields?.length
+        ? ` · fixing ${i.revise_fields.join(", ").replace(/_/g, " ")}` : "";
+      return `<div class="row">
+          <div class="col">
+            <p class="row-title">${esc(i.main_text)}</p>
+            ${i.subtitle ? `<p class="row-sub">${esc(i.subtitle)}</p>` : ""}
+            <p class="row-meta">${esc(bits)}${esc(fixing)}</p>
+          </div>
+          <span class="pill ${cls}">${label}</span>
+        </div>`;
+    }).join("");
   }
+
+  // ---------- posts ----------
+
+  const POST_PILL = {
+    pending: ["p-pending", "draft"], approved: ["p-approved", "ready"],
+    publishing: ["p-revise", "sending"], published: ["p-live", "sent"],
+    failed: ["p-failed", "failed"], rejected: ["p-rejected", "skipped"],
+    revise: ["p-revise", "fixing"],
+  };
+
+  function renderQueue() {
+    const waiting = posts.filter((p) => ["pending", "approved", "publishing"].includes(p.status));
+    const sent = posts.filter((p) => p.status === "published");
+    const toBuild = bank.filter((i) => i.status === "approved").length;
+
+    els.bQueue.textContent = waiting.length;
+    els.queueStats.innerHTML = `
+      <div class="stat"><b>${toBuild}</b><span>to build</span></div>
+      <div class="stat"><b>${waiting.length}</b><span>lined up</span></div>
+      <div class="stat"><b>${sent.length}</b><span>in drafts</span></div>`;
+
+    if (!posts.length) {
+      els.queueList.innerHTML = `<div class="empty">
+          <p class="empty-title">Nothing built yet.</p>
+          <p class="muted">Approved ideas show up here once they've been turned into actual posts.</p>
+        </div>`;
+      return;
+    }
+
+    els.queueList.innerHTML = posts.map((p, idx) => {
+      const [cls, label] = POST_PILL[p.status] ?? ["p-pending", p.status];
+      const mode = p.publish_mode === "draft" ? "you add the sound" : "posts itself";
+      const head = (p.caption || "").split("\n")[0].slice(0, 60) || "Untitled";
+      return `<button class="row" data-i="${idx}">
+          ${p.cover_url ? `<img class="thumb" src="${esc(p.cover_url)}" alt="">` : ""}
+          <div class="col">
+            <p class="row-title">${esc(head)}</p>
+            <p class="row-sub">${esc(p.social_accounts?.display_name ?? p.account_key)} · ${esc(mode)}</p>
+            <p class="row-meta">${esc(fmtWhen(p.published_at || p.scheduled_for))}${p.revision ? ` · rebuild ${p.revision}` : ""}${p.error ? ` · ${esc(p.error.slice(0, 50))}` : ""}</p>
+          </div>
+          <span class="pill ${cls}">${label}</span>
+        </button>`;
+    }).join("");
+
+    els.queueList.querySelectorAll(".row").forEach((b) =>
+      b.addEventListener("click", () => openPostSheet(posts[Number(b.dataset.i)])));
+  }
+
+  // ---------- data ----------
+
+  async function load() {
+    const [ideaRes, postRes] = await Promise.all([
+      supabase.from("idea_queue").select("*, social_accounts(display_name, platform)")
+        .order("created_at", { ascending: true }),
+      supabase.from("post_queue").select("*, social_accounts(display_name, platform)")
+        .order("scheduled_for", { ascending: false }),
+    ]);
+
+    if (ideaRes.error) {
+      console.error(ideaRes.error);
+      els.loading.textContent = "Couldn't load — check the console.";
+      return;
+    }
+    bank = ideaRes.data ?? [];
+    ideas = bank.filter((i) => i.status === "pending");
+    posts = postRes.error ? [] : (postRes.data ?? []);
+    if (postRes.error) console.error(postRes.error);
+
+    els.loading.hidden = true;
+    renderReview();
+    setTab(tab);
+  }
+
+  // ---------- idea decisions ----------
 
   function showUndo() {
     els.undo.classList.add("show");
     clearTimeout(undoTimer);
-    undoTimer = setTimeout(() => {
-      els.undo.classList.remove("show");
-      lastDecision = null;
-    }, 6000);
-  }
-
-  function advance(anim) {
-    return new Promise((resolve) => {
-      els.card.classList.add(anim);
-      setTimeout(() => {
-        ideas = ideas.slice(1);
-        leaving = false;
-        render();
-        showUndo();
-        resolve();
-      }, 260);
-    });
+    undoTimer = setTimeout(() => { els.undo.classList.remove("show"); lastDecision = null; }, 6000);
   }
 
   async function decide(status, extra = {}) {
-    const current = ideas[0];
-    if (!current || leaving) return;
+    const cur = ideas[0];
+    if (!cur || leaving) return;
     leaving = true;
-
-    const { error } = await supabase
-      .from("idea_queue")
-      .update({ status, ...extra })
-      .eq("id", current.id);
-
-    if (error) {
-      console.error(error);
+    const { error } = await supabase.from("idea_queue").update({ status, ...extra }).eq("id", cur.id);
+    if (error) { console.error(error); leaving = false; return; }
+    lastDecision = cur;
+    els.card.classList.add(
+      status === "approved" ? "leaving-approve" : status === "revise" ? "leaving-revise" : "leaving-reject");
+    setTimeout(() => {
+      Object.assign(cur, { status, ...extra });
+      ideas = ideas.slice(1);
       leaving = false;
-      return;
-    }
-
-    lastDecision = current;
-    await advance(
-      status === "approved" ? "leaving-approve"
-      : status === "revise" ? "leaving-revise"
-      : "leaving-reject",
-    );
+      renderReview(); renderCount(); showUndo();
+    }, 260);
   }
 
   // Tapping fast on a phone means the occasional wrong call. One step back is
@@ -433,68 +629,154 @@
     lastDecision = null;
     els.undo.classList.remove("show");
     clearTimeout(undoTimer);
-
-    const { error } = await supabase
-      .from("idea_queue")
-      .update({ status: "pending", revise_fields: [], revise_note: null })
-      .eq("id", idea.id);
-
+    const { error } = await supabase.from("idea_queue")
+      .update({ status: "pending", revise_fields: [], revise_note: null }).eq("id", idea.id);
     if (error) { console.error(error); return; }
+    Object.assign(idea, { status: "pending", revise_fields: [], revise_note: null });
     ideas = [idea, ...ideas];
-    render();
+    renderReview(); renderCount();
+    if (tab === "review") els.actions.hidden = false;
   }
 
-  // --- Fix sheet ---------------------------------------------------------
+  // ---------- sheets ----------
 
-  function buildPicks() {
-    els.picks.innerHTML = FIXABLE
-      .map((f) => `<button class="pick" data-key="${f.key}" aria-pressed="false">${f.label}</button>`)
-      .join("");
-    els.picks.querySelectorAll(".pick").forEach((b) => {
+  function openSheet(el) {
+    els.scrim.classList.add("open");
+    el.classList.add("open");
+    el.setAttribute("aria-hidden", "false");
+  }
+  function closeSheets() {
+    els.scrim.classList.remove("open");
+    for (const s of [els.sheetFix, els.sheetPost, els.sheetAsk]) {
+      s.classList.remove("open");
+      s.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  function wirePicks(container, set, sendBtn) {
+    container.querySelectorAll(".pick").forEach((b) => {
       b.addEventListener("click", () => {
-        const key = b.dataset.key;
         const on = b.getAttribute("aria-pressed") === "true";
         b.setAttribute("aria-pressed", String(!on));
-        on ? picked.delete(key) : picked.add(key);
-        els.btnSend.disabled = picked.size === 0;
+        on ? set.delete(b.dataset.key) : set.add(b.dataset.key);
+        sendBtn.disabled = set.size === 0;
       });
     });
   }
 
-  function openSheet() {
+  function openFix() {
     if (!ideas[0]) return;
     picked = new Set();
     els.note.value = "";
     els.btnSend.disabled = true;
-    buildPicks();
-    els.scrim.classList.add("open");
-    els.sheet.classList.add("open");
-    els.sheet.setAttribute("aria-hidden", "false");
+    els.picks.innerHTML = IDEA_FIXABLE
+      .map((f) => `<button class="pick" data-key="${f.key}" aria-pressed="false">${f.label}</button>`).join("");
+    wirePicks(els.picks, picked, els.btnSend);
+    openSheet(els.sheetFix);
   }
 
-  function closeSheet() {
-    els.scrim.classList.remove("open");
-    els.sheet.classList.remove("open");
-    els.sheet.setAttribute("aria-hidden", "true");
-  }
-
-  async function sendBack() {
+  async function sendFix() {
     if (!picked.size) return;
-    const fields = [...picked];
-    const note = els.note.value.trim();
-    closeSheet();
-    await decide("revise", {
-      revise_fields: fields,
-      revise_note: note || null,
-    });
+    const fields = [...picked], note = els.note.value.trim();
+    closeSheets();
+    await decide("revise", { revise_fields: fields, revise_note: note || null });
+    toast("Sent back for a rewrite");
   }
+
+  // Mihir only sees a finished post once it's in his TikTok drafts, so the fix
+  // loop has to work there too. Parts are derived from the actual slides rather
+  // than a fixed menu, so "Slide 3" always means the slide he's looking at.
+  function postParts(p) {
+    const n = (p.media_urls || []).length;
+    const parts = [{ key: "hook", label: "The hook" }, { key: "caption", label: "Caption" }];
+    for (let i = 0; i < n; i++) {
+      const key = i === 0 ? "cover" : i === n - 1 ? "cta" : `slide_${i + 1}`;
+      const label = i === 0 ? "Cover" : i === n - 1 ? "Last slide" : `Slide ${i + 1}`;
+      parts.push({ key, label });
+    }
+    return parts;
+  }
+
+  function openPostSheet(p) {
+    openPost = p;
+    postPicked = new Set();
+    els.postNote.value = "";
+    els.btnPostSend.disabled = true;
+    els.postTitle.textContent = (p.caption || "").split("\n")[0].slice(0, 60) || "Post";
+    const [, label] = POST_PILL[p.status] ?? ["", p.status];
+    els.postSub.textContent =
+      `${p.social_accounts?.display_name ?? p.account_key} · ${label}` +
+      (p.publish_mode === "draft" ? " · you add the sound" : "");
+    els.postStrip.innerHTML = (p.media_urls || []).map((u) => `<img src="${esc(u)}" alt="">`).join("");
+    els.postPicks.innerHTML = postParts(p)
+      .map((f) => `<button class="pick" data-key="${f.key}" aria-pressed="false">${f.label}</button>`).join("");
+    wirePicks(els.postPicks, postPicked, els.btnPostSend);
+    openSheet(els.sheetPost);
+  }
+
+  async function sendPostFix() {
+    if (!openPost || !postPicked.size) return;
+    const fields = [...postPicked], note = els.postNote.value.trim();
+    const { error } = await supabase.from("post_queue")
+      .update({ status: "revise", revise_fields: fields, revise_note: note || null })
+      .eq("id", openPost.id);
+    closeSheets();
+    if (error) { console.error(error); toast("Couldn't send — try again"); return; }
+    Object.assign(openPost, { status: "revise", revise_fields: fields, revise_note: note || null });
+    renderQueue();
+    toast("Sent for rebuild");
+  }
+
+  function copyCaption() {
+    if (!openPost) return;
+    const tags = (openPost.hashtags || []).map((t) => (t.startsWith("#") ? t : `#${t}`)).join(" ");
+    const text = tags ? `${openPost.caption}\n\n${tags}` : openPost.caption;
+    navigator.clipboard.writeText(text);
+    els.btnCopyCaption.textContent = "Copied";
+    setTimeout(() => { els.btnCopyCaption.textContent = "Copy caption"; }, 1800);
+  }
+
+  function openAsk() {
+    askCount = 6;
+    els.askNote.value = "";
+    els.counts.innerHTML = [3, 6, 10]
+      .map((n) => `<button class="pick" data-n="${n}" aria-pressed="${n === 6}">${n} hooks</button>`).join("");
+    els.counts.querySelectorAll(".pick").forEach((b) => {
+      b.addEventListener("click", () => {
+        askCount = Number(b.dataset.n);
+        els.counts.querySelectorAll(".pick").forEach((o) =>
+          o.setAttribute("aria-pressed", String(Number(o.dataset.n) === askCount)));
+      });
+    });
+    openSheet(els.sheetAsk);
+  }
+
+  async function sendAsk() {
+    const note = els.askNote.value.trim();
+    closeSheets();
+    const { error } = await supabase.from("hook_requests")
+      .insert({ account_key: "naomi_vale_tiktok", wanted: askCount, note: note || null, status: "open" });
+    if (error) { console.error(error); toast("Couldn't send — try again"); return; }
+    toast(`Asked for ${askCount} more`);
+  }
+
+  els.tabReview.addEventListener("click", () => setTab("review"));
+  els.tabBank.addEventListener("click", () => setTab("bank"));
+  els.tabQueue.addEventListener("click", () => setTab("queue"));
 
   els.btnReject.addEventListener("click", () => decide("rejected"));
   els.btnApprove.addEventListener("click", () => decide("approved"));
-  els.btnRevise.addEventListener("click", openSheet);
-  els.btnCancel.addEventListener("click", closeSheet);
-  els.scrim.addEventListener("click", closeSheet);
-  els.btnSend.addEventListener("click", sendBack);
+  els.btnRevise.addEventListener("click", openFix);
+  els.btnCancel.addEventListener("click", closeSheets);
+  els.btnSend.addEventListener("click", sendFix);
+  els.btnPostCancel.addEventListener("click", closeSheets);
+  els.btnPostSend.addEventListener("click", sendPostFix);
+  els.btnCopyCaption.addEventListener("click", copyCaption);
+  els.btnAsk.addEventListener("click", openAsk);
+  els.btnAskEmpty.addEventListener("click", openAsk);
+  els.btnAskCancel.addEventListener("click", closeSheets);
+  els.btnAskSend.addEventListener("click", sendAsk);
+  els.scrim.addEventListener("click", closeSheets);
   els.undo.addEventListener("click", undo);
 
   load();
