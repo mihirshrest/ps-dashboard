@@ -138,6 +138,27 @@ async function resolveAccountId(post: QueuedPost): Promise<string> {
 // Publish
 // ---------------------------------------------------------------------------
 
+/**
+ * TikTok treats a photo post's text as the slideshow TITLE and caps it at 90
+ * characters, so sending a full caption fails with TIKTOK_PHOTO_TITLE_TOO_LONG.
+ * For photo carousels we send the hook line only; the real caption is pasted by
+ * hand from queue.html anyway, because TikTok accepts no caption on drafts.
+ * Videos and every other platform keep the full caption.
+ */
+const TIKTOK_PHOTO_TITLE_MAX = 90;
+
+export function outboundText(post: QueuedPost): string {
+  const full = renderCaption(post);
+  const isTikTokPhoto = post.platform === "tiktok" && post.media_type !== "video";
+  if (!isTikTokPhoto) return full;
+
+  const firstLine = (post.caption.split("\n")[0] ?? "").trim();
+  const title = firstLine || full;
+  return title.length <= TIKTOK_PHOTO_TITLE_MAX
+    ? title
+    : title.slice(0, TIKTOK_PHOTO_TITLE_MAX - 1).trimEnd() + "…";
+}
+
 export async function publish(post: QueuedPost): Promise<PublishResult> {
   requireEnv();
 
@@ -162,7 +183,7 @@ export async function publish(post: QueuedPost): Promise<PublishResult> {
   const tiktokSettings = post.platform === "tiktok" ? { draft: isDraft } : undefined;
 
   const body: Record<string, unknown> = {
-    content: renderCaption(post),
+    content: outboundText(post),
     mediaItems,
     platforms: [
       {
