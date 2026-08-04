@@ -816,8 +816,12 @@
 
   function copyCaption() {
     if (!openPost) return;
+    // TikTok already shows the hook as the photo post's title, so leaving it at
+    // the top of the caption prints it twice on the same screen. Copy the body
+    // only — the stored caption keeps its first line, since that IS the title.
+    const body = (openPost.caption || "").split("\n").slice(1).join("\n").trim();
     const tags = (openPost.hashtags || []).map((t) => (t.startsWith("#") ? t : `#${t}`)).join(" ");
-    const text = tags ? `${openPost.caption}\n\n${tags}` : openPost.caption;
+    const text = tags ? `${body}\n\n${tags}` : body;
     navigator.clipboard.writeText(text);
     els.btnCopyCaption.textContent = "Copied";
     setTimeout(() => { els.btnCopyCaption.textContent = "Copy caption"; }, 1800);
