@@ -95,6 +95,13 @@
   .meta-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
   .account { font-size: 13px; font-weight: 600; }
   .time { font-size: 12px; color: rgba(246,242,237,.5); }
+  /* The cover slide carries the big line and nothing else, so the subtitle sits
+     here as the post's promise rather than on the mock cover — otherwise the
+     preview implies text that never gets rendered. */
+  .promise {
+    font-size: 14px; line-height: 1.5; margin: 0 0 12px;
+    color: #C4894F; font-weight: 600;
+  }
   .concept { font-size: 15px; line-height: 1.55; margin: 0 0 16px; }
   .plan { margin: 0 0 6px; padding: 0; list-style: none; counter-reset: s; }
   .plan li {
@@ -520,13 +527,13 @@
         ${cur.revision > 0 ? `<span class="chip-tl">rewrite ${cur.revision}</span>` : ""}
         ${count ? `<span class="chip-tr">${count} slides</span>` : ""}
         <div class="cover-main">${esc(cur.main_text)}</div>
-        ${cur.subtitle ? `<div class="cover-sub">${esc(cur.subtitle)}</div>` : ""}
       </div>
       <div class="body">
         <div class="meta-row">
           <span class="account">${esc(cur.social_accounts?.display_name ?? cur.account_key)}</span>
           <span class="time">${fmtDay(cur.created_at)}</span>
         </div>
+        ${cur.subtitle ? `<p class="promise">${esc(cur.subtitle)}</p>` : ""}
         ${cur.concept ? `<p class="concept">${esc(cur.concept)}</p>` : ""}
         ${plan.length ? `<ul class="plan">${plan.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>` : ""}
         <dl class="tag-grid">
