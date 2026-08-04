@@ -250,6 +250,12 @@
     border: 1px solid rgba(246,242,237,.2); background: transparent;
     color: #F6F2ED; font-size: 14.5px; font-weight: 600;
   }
+  .btn-posted {
+    width: 100%; padding: 13px 0; border-radius: 12px; margin-bottom: 16px;
+    border: none; background: #3B5840; color: #F6F2ED;
+    font-size: 14.5px; font-weight: 700;
+  }
+  .btn-posted[hidden] { display: none; }
   .strip { display: flex; gap: 7px; overflow-x: auto; margin: 0 0 16px; padding-bottom: 4px; }
   .strip::-webkit-scrollbar { display: none; }
   .strip img {
@@ -362,6 +368,7 @@
   <p class="muted" id="post-sub"></p>
   <div class="strip" id="post-strip"></div>
   <button class="btn-copy" id="btn-copy-caption">Copy caption</button>
+  <button class="btn-posted" id="btn-posted">Mark as posted</button>
   <p class="muted" style="margin-bottom:10px">Something wrong? Tap the parts that need rebuilding.</p>
   <div class="picks" id="post-picks"></div>
   <textarea id="post-note" placeholder="Optional — what's wrong with it, in your words"></textarea>
@@ -435,7 +442,7 @@
     btnCancel: $("btn-cancel"), btnSend: $("btn-send"),
     sheetPost: $("sheet-post"), postTitle: $("post-title"), postSub: $("post-sub"),
     postStrip: $("post-strip"), postPicks: $("post-picks"), postNote: $("post-note"),
-    btnCopyCaption: $("btn-copy-caption"),
+    btnCopyCaption: $("btn-copy-caption"), btnPosted: $("btn-posted"),
     btnPostCancel: $("btn-post-cancel"), btnPostSend: $("btn-post-send"),
     sheetAsk: $("sheet-ask"), counts: $("counts"), askNote: $("ask-note"),
     btnAskCancel: $("btn-ask-cancel"), btnAskSend: $("btn-ask-send"),
@@ -574,7 +581,7 @@
     pending: ["p-pending", "draft"], approved: ["p-approved", "ready"],
     publishing: ["p-revise", "sending"], published: ["p-live", "sent"],
     failed: ["p-failed", "failed"], rejected: ["p-rejected", "skipped"],
-    revise: ["p-revise", "fixing"],
+    revise: ["p-revise", "fixing"], live: ["p-live", "posted"],
   };
 
   function renderQueue() {
@@ -755,6 +762,10 @@
       .map((u, i) => `<img src="${esc(u)}" data-i="${i}" alt="Slide ${i + 1}">`).join("");
     els.postStrip.querySelectorAll("img").forEach((im) =>
       im.addEventListener("click", () => openViewer(p.media_urls || [], Number(im.dataset.i))));
+    // Only worth offering once the draft has actually reached TikTok, and
+    // pointless once he's already marked it.
+    els.btnPosted.hidden = p.status !== "published";
+    els.btnPosted.textContent = "Mark as posted";
     els.postPicks.innerHTML = postParts(p)
       .map((f) => `<button class="pick" data-key="${f.key}" aria-pressed="false">${f.label}</button>`).join("");
     wirePicks(els.postPicks, postPicked, els.btnPostSend);
@@ -814,6 +825,18 @@
     if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
   });
 
+  async function markPosted() {
+    if (!openPost) return;
+    const { error } = await supabase.from("post_queue")
+      .update({ status: "live", live_at: new Date().toISOString() })
+      .eq("id", openPost.id);
+    if (error) { console.error(error); toast("Couldn't save — try again"); return; }
+    Object.assign(openPost, { status: "live" });
+    els.btnPosted.hidden = true;
+    renderQueue();
+    toast("Marked as posted");
+  }
+
   function copyCaption() {
     if (!openPost) return;
     // TikTok already shows the hook as the photo post's title, so leaving it at
@@ -863,6 +886,7 @@
   els.btnPostCancel.addEventListener("click", closeSheets);
   els.btnPostSend.addEventListener("click", sendPostFix);
   els.btnCopyCaption.addEventListener("click", copyCaption);
+  els.btnPosted.addEventListener("click", markPosted);
   els.btnAsk.addEventListener("click", openAsk);
   els.btnAskEmpty.addEventListener("click", openAsk);
   els.btnAskCancel.addEventListener("click", closeSheets);
