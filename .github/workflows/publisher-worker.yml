@@ -1,6 +1,15 @@
 name: Publisher Worker
 
 on:
+  # GitHub throttles scheduled runs hard — "*/15" has been landing closer to
+  # every 2.5 hours in practice, so a post built at 11am could sit unqueued
+  # until mid afternoon. Pushing the slides is the last step of building a post,
+  # so treat that push as the signal: the worker runs seconds later and the
+  # draft is in TikTok before the notification goes out. The cron stays as a
+  # safety net for anything queued without a media push.
+  push:
+    paths:
+      - "media/**"
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch: {}
