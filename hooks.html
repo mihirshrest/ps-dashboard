@@ -256,6 +256,37 @@
     flex: none; width: 62px; height: 78px; border-radius: 8px;
     object-fit: cover; background: #0F1511;
   }
+  /* Full-screen slide viewer. The thumbnails are too small to judge a grid on,
+     which is the whole point of looking at a post before it goes out. */
+  .viewer {
+    position: fixed; inset: 0; z-index: 30;
+    background: rgba(6,10,8,.97);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; padding: 18px;
+    opacity: 0; pointer-events: none; transition: opacity .18s ease;
+  }
+  .viewer.open { opacity: 1; pointer-events: auto; }
+  .viewer img {
+    max-width: 100%; max-height: 76dvh;
+    object-fit: contain; border-radius: 12px;
+  }
+  .viewer-bar {
+    display: flex; align-items: center; gap: 18px;
+    font-size: 13px; color: rgba(246,242,237,.65);
+  }
+  .viewer-bar button {
+    width: 44px; height: 44px; border-radius: 999px;
+    border: 1px solid rgba(246,242,237,.22); background: transparent;
+    color: #F6F2ED; font-size: 19px; line-height: 1;
+  }
+  .viewer-bar button:disabled { opacity: .25; }
+  .viewer-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 40px; height: 40px; border-radius: 999px;
+    border: 1px solid rgba(246,242,237,.22); background: rgba(11,18,14,.6);
+    color: #F6F2ED; font-size: 17px; line-height: 1;
+  }
+
   .toast {
     position: fixed; left: 50%; transform: translateX(-50%) translateY(10px);
     bottom: calc(96px + env(safe-area-inset-bottom));
@@ -340,6 +371,16 @@
   </div>
 </section>
 
+<div class="viewer" id="viewer" aria-hidden="true">
+  <button class="viewer-close" id="viewer-close" aria-label="Close">✕</button>
+  <img id="viewer-img" alt="">
+  <div class="viewer-bar">
+    <button id="viewer-prev" aria-label="Previous slide">‹</button>
+    <span id="viewer-count"></span>
+    <button id="viewer-next" aria-label="Next slide">›</button>
+  </div>
+</div>
+
 <section class="sheet" id="sheet-ask" aria-hidden="true">
   <h2>Ask for more hooks</h2>
   <p class="muted">How many, and anything you want them to lean toward.</p>
@@ -398,6 +439,8 @@
     btnPostCancel: $("btn-post-cancel"), btnPostSend: $("btn-post-send"),
     sheetAsk: $("sheet-ask"), counts: $("counts"), askNote: $("ask-note"),
     btnAskCancel: $("btn-ask-cancel"), btnAskSend: $("btn-ask-send"),
+    viewer: $("viewer"), viewerImg: $("viewer-img"), viewerCount: $("viewer-count"),
+    viewerPrev: $("viewer-prev"), viewerNext: $("viewer-next"), viewerClose: $("viewer-close"),
   };
 
   let tab = "review";
@@ -405,6 +448,7 @@
   let leaving = false, lastDecision = null, undoTimer = null;
   let picked = new Set(), postPicked = new Set(), openPost = null;
   let bankFilter = "pending", askCount = 6;
+  let viewerSlides = [], viewerIdx = 0;
 
   const esc = (s) =>
     String(s ?? "").replace(/[&<>"']/g, (c) =>
@@ -707,7 +751,10 @@
     els.postSub.textContent =
       `${p.social_accounts?.display_name ?? p.account_key} · ${label}` +
       (p.publish_mode === "draft" ? " · you add the sound" : "");
-    els.postStrip.innerHTML = (p.media_urls || []).map((u) => `<img src="${esc(u)}" alt="">`).join("");
+    els.postStrip.innerHTML = (p.media_urls || [])
+      .map((u, i) => `<img src="${esc(u)}" data-i="${i}" alt="Slide ${i + 1}">`).join("");
+    els.postStrip.querySelectorAll("img").forEach((im) =>
+      im.addEventListener("click", () => openViewer(p.media_urls || [], Number(im.dataset.i))));
     els.postPicks.innerHTML = postParts(p)
       .map((f) => `<button class="pick" data-key="${f.key}" aria-pressed="false">${f.label}</button>`).join("");
     wirePicks(els.postPicks, postPicked, els.btnPostSend);
@@ -726,6 +773,46 @@
     renderQueue();
     toast("Sent for rebuild");
   }
+
+  // ---------- slide viewer ----------
+
+  function showSlide() {
+    els.viewerImg.src = viewerSlides[viewerIdx] ?? "";
+    els.viewerCount.textContent = `${viewerIdx + 1} of ${viewerSlides.length}`;
+    els.viewerPrev.disabled = viewerIdx === 0;
+    els.viewerNext.disabled = viewerIdx === viewerSlides.length - 1;
+  }
+
+  function openViewer(slides, i) {
+    if (!slides.length) return;
+    viewerSlides = slides;
+    viewerIdx = i;
+    showSlide();
+    els.viewer.classList.add("open");
+    els.viewer.setAttribute("aria-hidden", "false");
+  }
+
+  function closeViewer() {
+    els.viewer.classList.remove("open");
+    els.viewer.setAttribute("aria-hidden", "true");
+  }
+
+  function step(d) {
+    const next = viewerIdx + d;
+    if (next < 0 || next >= viewerSlides.length) return;
+    viewerIdx = next;
+    showSlide();
+  }
+
+  // Swipe, because nobody taps tiny arrows on a phone.
+  let touchX = null;
+  els.viewer.addEventListener("touchstart", (e) => { touchX = e.changedTouches[0].clientX; });
+  els.viewer.addEventListener("touchend", (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    touchX = null;
+    if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
+  });
 
   function copyCaption() {
     if (!openPost) return;
@@ -778,6 +865,16 @@
   els.btnAskSend.addEventListener("click", sendAsk);
   els.scrim.addEventListener("click", closeSheets);
   els.undo.addEventListener("click", undo);
+  els.viewerClose.addEventListener("click", closeViewer);
+  els.viewerPrev.addEventListener("click", () => step(-1));
+  els.viewerNext.addEventListener("click", () => step(1));
+  els.viewerImg.addEventListener("click", closeViewer);
+  document.addEventListener("keydown", (e) => {
+    if (!els.viewer.classList.contains("open")) return;
+    if (e.key === "Escape") closeViewer();
+    if (e.key === "ArrowLeft") step(-1);
+    if (e.key === "ArrowRight") step(1);
+  });
 
   load();
 </script>
