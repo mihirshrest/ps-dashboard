@@ -283,6 +283,9 @@
     max-width: 100%; max-height: 76dvh;
     object-fit: contain; border-radius: 12px;
   }
+  /* A <video> has no size until its metadata loads, so max-height alone leaves a
+     postage stamp on screen for the first second. Reels are always 9:16 — say so. */
+  .viewer video { height: 76dvh; width: auto; aspect-ratio: 9 / 16; background: #0F1511; }
   /* A reel is one video, not a run of slides, so the arrows and counter would
      only ever read "1 of 1". Hide the bar and let the player have the room. */
   .viewer.single .viewer-bar { display: none; }
@@ -822,6 +825,7 @@
     els.viewerImg.hidden = video;
     if (video) {
       els.viewerImg.removeAttribute("src");
+      if (openPost?.cover_url) els.viewerVideo.poster = openPost.cover_url;
       if (els.viewerVideo.src !== url) els.viewerVideo.src = url;
     } else {
       els.viewerVideo.pause();
