@@ -265,7 +265,7 @@
   .btn-posted[hidden] { display: none; }
   .strip { display: flex; gap: 7px; overflow-x: auto; margin: 0 0 16px; padding-bottom: 4px; }
   .strip::-webkit-scrollbar { display: none; }
-  .strip img {
+  .strip img, .strip video {
     flex: none; width: 62px; height: 78px; border-radius: 8px;
     object-fit: cover; background: #0F1511;
   }
@@ -279,10 +279,13 @@
     opacity: 0; pointer-events: none; transition: opacity .18s ease;
   }
   .viewer.open { opacity: 1; pointer-events: auto; }
-  .viewer img {
+  .viewer img, .viewer video {
     max-width: 100%; max-height: 76dvh;
     object-fit: contain; border-radius: 12px;
   }
+  /* A reel is one video, not a run of slides, so the arrows and counter would
+     only ever read "1 of 1". Hide the bar and let the player have the room. */
+  .viewer.single .viewer-bar { display: none; }
   .viewer-bar {
     display: flex; align-items: center; gap: 18px;
     font-size: 13px; color: rgba(246,242,237,.65);
@@ -388,6 +391,7 @@
 <div class="viewer" id="viewer" aria-hidden="true">
   <button class="viewer-close" id="viewer-close" aria-label="Close">✕</button>
   <img id="viewer-img" alt="">
+  <video id="viewer-video" controls playsinline preload="metadata" hidden></video>
   <div class="viewer-bar">
     <button id="viewer-prev" aria-label="Previous slide">‹</button>
     <span id="viewer-count"></span>
@@ -453,7 +457,8 @@
     btnPostCancel: $("btn-post-cancel"), btnPostSend: $("btn-post-send"),
     sheetAsk: $("sheet-ask"), counts: $("counts"), askNote: $("ask-note"),
     btnAskCancel: $("btn-ask-cancel"), btnAskSend: $("btn-ask-send"),
-    viewer: $("viewer"), viewerImg: $("viewer-img"), viewerCount: $("viewer-count"),
+    viewer: $("viewer"), viewerImg: $("viewer-img"), viewerVideo: $("viewer-video"),
+    viewerCount: $("viewer-count"),
     viewerPrev: $("viewer-prev"), viewerNext: $("viewer-next"), viewerClose: $("viewer-close"),
   };
 
@@ -741,15 +746,28 @@
     toast("Sent back for a rewrite");
   }
 
+  // A reel arrives as a single .mp4 where a carousel has six .jpgs. Everything that
+  // renders media has to branch on that, because an <img> pointed at an .mp4 is just
+  // a broken image icon.
+  const isVideo = (u) => /\.(mp4|mov|webm)(\?|$)/i.test(u || "");
+
   // Mihir only sees a finished post once it's in his TikTok drafts, so the fix
   // loop has to work there too. Parts are derived from the actual slides rather
   // than a fixed menu, so "Slide 3" always means the slide he's looking at.
   function postParts(p) {
-    const n = (p.media_urls || []).length;
+    const urls = p.media_urls || [];
     const parts = [{ key: "hook", label: "The hook" }, { key: "caption", label: "Caption" }];
-    for (let i = 0; i < n; i++) {
-      const key = i === 0 ? "cover" : i === n - 1 ? "cta" : `slide_${i + 1}`;
-      const label = i === 0 ? "Cover" : i === n - 1 ? "Last slide" : `Slide ${i + 1}`;
+    // A reel's parts can't be counted off media_urls — there is only ever one file.
+    // Its shape is fixed instead: opener, four topic slides, CTA.
+    if (urls.length === 1 && isVideo(urls[0])) {
+      parts.push({ key: "opener", label: "Opener clip" });
+      for (let i = 2; i <= 5; i++) parts.push({ key: `slide_${i}`, label: `Slide ${i - 1}` });
+      parts.push({ key: "cta", label: "Last slide" });
+      return parts;
+    }
+    for (let i = 0; i < urls.length; i++) {
+      const key = i === 0 ? "cover" : i === urls.length - 1 ? "cta" : `slide_${i + 1}`;
+      const label = i === 0 ? "Cover" : i === urls.length - 1 ? "Last slide" : `Slide ${i + 1}`;
       parts.push({ key, label });
     }
     return parts;
@@ -765,10 +783,13 @@
     els.postSub.textContent =
       `${p.social_accounts?.display_name ?? p.account_key} · ${label}` +
       (p.publish_mode === "draft" ? " · you add the sound" : "");
-    els.postStrip.innerHTML = (p.media_urls || [])
-      .map((u, i) => `<img src="${esc(u)}" data-i="${i}" alt="Slide ${i + 1}">`).join("");
-    els.postStrip.querySelectorAll("img").forEach((im) =>
-      im.addEventListener("click", () => openViewer(p.media_urls || [], Number(im.dataset.i))));
+    els.postStrip.innerHTML = (p.media_urls || []).map((u, i) =>
+      isVideo(u)
+        ? `<video src="${esc(u)}" data-i="${i}" muted playsinline preload="metadata"${
+            p.cover_url ? ` poster="${esc(p.cover_url)}"` : ""}></video>`
+        : `<img src="${esc(u)}" data-i="${i}" alt="Slide ${i + 1}">`).join("");
+    els.postStrip.querySelectorAll("img, video").forEach((el) =>
+      el.addEventListener("click", () => openViewer(p.media_urls || [], Number(el.dataset.i))));
     // Only worth offering once the draft has actually reached TikTok, and
     // pointless once he's already marked it.
     els.btnPosted.hidden = p.status !== "published";
@@ -795,7 +816,19 @@
   // ---------- slide viewer ----------
 
   function showSlide() {
-    els.viewerImg.src = viewerSlides[viewerIdx] ?? "";
+    const url = viewerSlides[viewerIdx] ?? "";
+    const video = isVideo(url);
+    els.viewerVideo.hidden = !video;
+    els.viewerImg.hidden = video;
+    if (video) {
+      els.viewerImg.removeAttribute("src");
+      if (els.viewerVideo.src !== url) els.viewerVideo.src = url;
+    } else {
+      els.viewerVideo.pause();
+      els.viewerVideo.removeAttribute("src");
+      els.viewerImg.src = url;
+    }
+    els.viewer.classList.toggle("single", viewerSlides.length < 2);
     els.viewerCount.textContent = `${viewerIdx + 1} of ${viewerSlides.length}`;
     els.viewerPrev.disabled = viewerIdx === 0;
     els.viewerNext.disabled = viewerIdx === viewerSlides.length - 1;
@@ -811,6 +844,8 @@
   }
 
   function closeViewer() {
+    // Leaving it playing behind a hidden overlay is exactly the bug you'd expect.
+    els.viewerVideo.pause();
     els.viewer.classList.remove("open");
     els.viewer.setAttribute("aria-hidden", "true");
   }
